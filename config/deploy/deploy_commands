@@ -1,0 +1,5 @@
+деплой на тест:
+export $(cat ./config/deploy/.stage | xargs) && ./bin/deploy.sh
+
+деплой на прод:
+export $(cat ./config/deploy/.production | xargs) && ./bin/deploy.sh
