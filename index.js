@@ -89,22 +89,29 @@ callback3 = function(response) {
       return item.eventId === view.id;
     });
 
+    let homeName = event.home.name.split(' ').join('-');
+    let awayName = event.away.name.split(' ').join('-');
+
     let message = '';
     message += 'Лига: ' + event.league.name + "\n";
-    message += event.home.name + ' ' + event.ss + ' ' + event.away.name + "\n" + event.timer.tm + ' минута' + "\n";
+    message += '<b>' + event.home.name + ' ' + event.ss + ' ' + event.away.name + "</b>\n" + event.timer.tm + ' минута ';
+    message += "<a href=\'https://ru.betsapi.com/r/" + event.id + "/" + homeName + "-v-" +  awayName + "\'>Подробно</a>\n"
     message += odd.odd.over_od + '/' + odd.odd.handicap;
     if (view.stats) {
       message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' +  view.stats.attacks[1];
       message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' +  view.stats.dangerous_attacks[1];
-      message += "\n" + 'Удары: ' + view.stats.off_target[0] + '-' +  view.stats.off_target[1];
       message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' +  view.stats.on_target[1];
+      message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' +  view.stats.off_target[1];
       message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' +  view.stats.corners[1];
       message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' +  view.stats.penalties[1];
       message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' +  view.stats.redcards[1];
       message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' +  view.stats.yellowcards[1];
+      if (view.stats.ball_safe) {
+        message += "\n" + 'Мяч вне атаки: ' + view.stats.ball_safe[0] + '-' + view.stats.ball_safe[1];
+      }
     }
 
-    bot.sendMessage('@roma_best_football_bets', message);
+    bot.sendMessage('@roma_best_football_bets', message, { parse_mode: "HTML" });
   });
 }
 
