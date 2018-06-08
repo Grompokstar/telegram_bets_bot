@@ -42,7 +42,7 @@ function start() {
                 let jsonOdds = JSON.parse(response3).results['1_3'];
                 let odd = jsonOdds[jsonOdds.length - 1];
 
-                if (odd.over_od <= 2.5) {
+                if (odd.over_od <= 1.5) {
 
                   let homeName = item.home.name.split(' ').join('-');
                   let awayName = item.away.name.split(' ').join('-');
