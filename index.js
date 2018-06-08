@@ -34,8 +34,7 @@ callback = function(response) {
     filteredResults = _.filter(results, function(item) {
       let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
       //return true;
-      return (item.ss === '0-0' && item.timer.tm === 20) || (scores <= 2 && item.timer.tm === 60) ||
-        (item.scores[2].home === item.scores[2].away && item.timer.tm === 86);
+      return (item.ss === '0-0' && item.timer.tm === 20) || (scores <= 2 && item.timer.tm === 60)
     });
 
     _.forEach(filteredResults, function(item) {
@@ -52,8 +51,6 @@ callback2 = function(response) {
   });
 
   counter++;
-  console.log(counter);
-  //console.log(oddsArrayKeys);
 
   response.on('end', function () {
 
@@ -62,7 +59,6 @@ callback2 = function(response) {
     _.forEach(filteredResults, function(item) {
       if (view.id === item.id) {
         item.view = view;
-        console.log(item.view)
       }
     });
 
@@ -81,8 +77,6 @@ callback3 = function(response) {
   });
 
   counter2++;
-  console.log(counter2);
-  console.log(requestIds);
 
   response.on('end', function () {
 
