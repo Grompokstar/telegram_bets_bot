@@ -1,10 +1,11 @@
 process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require('node-telegram-bot-api');
+const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
 const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot = new TelegramBot(mainToken, {polling: true});
+const bot = new TelegramBot(testToken, {polling: true});
 const testBotName = '@test_telegram_bots';
 const mainBotName = '@roma_best_football_bets';
 
@@ -21,7 +22,8 @@ function start() {
 
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
-        return item.timer.tm === 22 && scores <= 1
+        return true
+        //return item.timer.tm === 22 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
@@ -34,7 +36,7 @@ function start() {
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
+            if (true) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=3')
                 .then(function (response3) {
@@ -53,9 +55,12 @@ function start() {
                         let sumHomeGoals = 0;
 
                         _.forEach(homeArray, function (match) {
-                          let scoreArray = match.ss.split('-');
+                          if (match.ss) {
+                            let scoreArray = match.ss.split('-');
 
-                          sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
+                            sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
+                          }
+
                         });
 
                         let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
@@ -63,24 +68,29 @@ function start() {
                         let sumAwayGoals = 0;
 
                         _.forEach(awayArray, function (match) {
-                          let scoreArray = match.ss.split('-');
+                          if (match.ss) {
+                            let scoreArray = match.ss.split('-');
 
-                          sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
+                            sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
+                          }
                         });
 
                         let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
 
-                        let homeName = item.home.name.split(' ').join('-');
-                        let awayName = item.away.name.split(' ').join('-');
+                        let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
+                        let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
 
-                        let goalsArray = item.ss.split('-');
+                        let goalsArray;
+
+                        if (item.ss) {
+                          goalsArray = item.ss.split('-');
+                        }
 
 
                         let message = '';
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                         message += odd.over_od + '/' + odd.handicap;
-                        message += " <a href=\'https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName + "\'>Подробно</a>";
 
                         message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
                         if (view.stats) {
@@ -99,7 +109,17 @@ function start() {
                           message += "</i>"
                         }
 
-                        bot.sendMessage(mainBotName, message, { parse_mode: "HTML" });
+                        const ik = new InlineKeyboard();
+
+                        ik.addRow(
+                            { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName }
+                          );
+
+                        let ikExport = ik.export();
+
+                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport)
+
+                        bot.sendMessage('@test_telegram_bots', message, options);
                       })
                       .catch(function (err) {
                         console.log('request history failed' + err)

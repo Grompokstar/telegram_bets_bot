@@ -16,6 +16,7 @@
     "lodash": "^4.17.10",
     "node-telegram-bot-api": "^0.30.0",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "telegram-keyboard-wrapper": "^1.0.1"
   }
 }
