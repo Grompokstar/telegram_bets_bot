@@ -5,7 +5,7 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot = new TelegramBot(testToken, {polling: true});
+const bot = new TelegramBot(mainToken, {polling: true});
 const testBotName = '@test_telegram_bots';
 const mainBotName = '@roma_best_football_bets';
 
@@ -22,8 +22,8 @@ function start() {
 
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
-        return true
-        //return item.timer.tm === 22 && scores <= 1
+        //return true
+        return item.timer.tm === 22 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
@@ -36,7 +36,7 @@ function start() {
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (true) {
+            if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=3')
                 .then(function (response3) {
@@ -119,7 +119,7 @@ function start() {
 
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport)
 
-                        bot.sendMessage('@test_telegram_bots', message, options);
+                        bot.sendMessage(mainBotName, message, options);
                       })
                       .catch(function (err) {
                         console.log('request history failed' + err)
