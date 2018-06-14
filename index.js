@@ -21,9 +21,7 @@ function start() {
 
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
-        return true;
-
-        //return item.timer.tm === 22 && scores <= 1
+        return item.timer.tm === 22 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
