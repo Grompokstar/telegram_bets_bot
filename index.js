@@ -17,7 +17,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
 
-        return item.timer.tm === 22
+        return item.timer.tm === 22 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
@@ -27,12 +27,6 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-
-            /*_.forEach(filteredResults, function(item) {
-              if (view.id === item.id) {
-                item.view = view;
-              }
-            });*/
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
@@ -44,7 +38,7 @@ function start() {
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let odd = jsonOdds[jsonOdds.length - 1];
 
-                  if (odd.handicap >= 2.5) {
+                  if (true) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -91,7 +85,7 @@ function start() {
                           message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
                           message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
                           if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                            message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                           }
                         }
 
