@@ -2,13 +2,16 @@ process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require('node-telegram-bot-api');
 const rp = require('request-promise');
 const _ = require('lodash');
-const token = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot = new TelegramBot(token, {polling: true});
+const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
+const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
+const bot = new TelegramBot(mainToken, {polling: true});
+const testBotName = '@test_telegram_bots';
+const mainBotName = '@roma_best_football_bets';
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 
 function start() {
-  var filteredResults = [];
+  let filteredResults = [];
 
   rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-BCLtMmtKT698vk')
     .then(function (response) {
@@ -98,7 +101,7 @@ function start() {
                           message += "</i>"
                         }
 
-                        bot.sendMessage('@test_telegram_bots', message, { parse_mode: "HTML" });
+                        bot.sendMessage(mainBotName, message, { parse_mode: "HTML" });
                       })
                       .catch(function (err) {
                         console.log('request history failed' + err)
