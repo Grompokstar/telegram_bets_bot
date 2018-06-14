@@ -54,7 +54,7 @@ function start() {
                           sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
                         });
 
-                        let averageHomeGoals = sumHomeGoals / homeArray.length;
+                        let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
 
                         let sumAwayGoals = 0;
 
@@ -64,7 +64,7 @@ function start() {
                           sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
                         });
 
-                        let averageAwayGoals = sumAwayGoals / awayArray.length;
+                        let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
 
                         let homeName = item.home.name.split(' ').join('-');
                         let awayName = item.away.name.split(' ').join('-');
