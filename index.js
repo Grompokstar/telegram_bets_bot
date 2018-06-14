@@ -2,8 +2,10 @@ process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require('node-telegram-bot-api');
 const rp = require('request-promise');
 const _ = require('lodash');
-const token = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
+const token = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
 const bot = new TelegramBot(token, {polling: true});
+
+const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 
 function start() {
   var filteredResults = [];
@@ -16,8 +18,9 @@ function start() {
 
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
+        return true;
 
-        return item.timer.tm === 22 && scores <= 1
+        //return item.timer.tm === 22 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
@@ -69,14 +72,18 @@ function start() {
                         let homeName = item.home.name.split(' ').join('-');
                         let awayName = item.away.name.split(' ').join('-');
 
+                        let goalsArray = item.ss.split('-');
+
+
                         let message = '';
-                        message += 'Лига: ' + item.league.name + "\n";
-                        message += '<b>' + item.home.name + ' ' + item.ss + ' ' + item.away.name + "</b>\n" + item.timer.tm + ' минута ';
-                        message += "<a href=\'https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName + "\'>Подробно</a>\n";
+                        message += '\u26BD ' + item.league.name + "\n";
+                        message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                         message += odd.over_od + '/' + odd.handicap;
-                        message += "\n" + 'Среднее голов за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
+                        message += " <a href=\'https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName + "\'>Подробно</a>";
+
+                        message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
                         if (view.stats) {
-                          message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                          message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
                           message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
                           message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
                           message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
@@ -87,9 +94,11 @@ function start() {
                           if (view.stats.possession_rt) {
                             message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                           }
+
+                          message += "</i>"
                         }
 
-                        bot.sendMessage('@roma_best_football_bets', message, { parse_mode: "HTML" });
+                        bot.sendMessage('@test_telegram_bots', message, { parse_mode: "HTML" });
                       })
                       .catch(function (err) {
                         console.log('request history failed' + err)
