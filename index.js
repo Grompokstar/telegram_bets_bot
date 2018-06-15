@@ -23,7 +23,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         let scores = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
         //return true
-        return item.timer.tm === 22 && scores <= 1
+        return item.timer.tm === 20 && scores <= 1
       });
 
       _.forEach(filteredResults, function(item) {
@@ -44,87 +44,108 @@ function start() {
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let odd = jsonOdds[jsonOdds.length - 1];
 
-                  if (true) {
+                  rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
+                    .then(function (response4) {
+                      console.log('запрос history');
+                      let homeArray = JSON.parse(response4).results['home'];
+                      let awayArray = JSON.parse(response4).results['away'];
 
-                    rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
-                      .then(function (response4) {
-                        console.log('запрос history');
-                        let homeArray = JSON.parse(response4).results['home'];
-                        let awayArray = JSON.parse(response4).results['away'];
+                      let sumHomeGoals = 0;
 
-                        let sumHomeGoals = 0;
+                      _.forEach(homeArray, function (match) {
+                        if (match.ss) {
+                          let scoreArray = match.ss.split('-');
 
-                        _.forEach(homeArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
-
-                            sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
-
-                        });
-
-                        let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
-
-                        let sumAwayGoals = 0;
-
-                        _.forEach(awayArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
-
-                            sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
-                        });
-
-                        let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
-
-                        let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
-                        let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
-
-                        let goalsArray;
-
-                        if (item.ss) {
-                          goalsArray = item.ss.split('-');
+                          sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
                         }
 
-
-                        let message = '';
-                        message += '\u26BD ' + item.league.name + "\n";
-                        message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        message += odd.over_od + '/' + odd.handicap;
-
-                        message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
-                        if (view.stats) {
-                          message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
-                          message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
-                          message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
-                          message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
-                          message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
-                          message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
-                          message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
-                          message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
-                          if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
-                          }
-
-                          message += "</i>"
-                        }
-
-                        const ik = new InlineKeyboard();
-
-                        ik.addRow(
-                            { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName }
-                          );
-
-                        let ikExport = ik.export();
-
-                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport)
-
-                        bot.sendMessage(mainBotName, message, options);
-                      })
-                      .catch(function (err) {
-                        console.log('request history failed' + err)
                       });
-                  }
+
+                      let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
+
+                      let sumAwayGoals = 0;
+
+                      _.forEach(awayArray, function (match) {
+                        if (match.ss) {
+                          let scoreArray = match.ss.split('-');
+
+                          sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
+                        }
+                      });
+
+                      let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
+
+                      let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
+                      let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
+
+                      let goalsArray;
+
+                      if (item.ss) {
+                        goalsArray = item.ss.split('-');
+                      }
+
+
+                      let message = '';
+                      message += '\u26BD ' + item.league.name + "\n";
+                      message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
+                      message += odd.over_od + '/' + odd.handicap;
+
+                      message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
+                      if (view.stats) {
+                        message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                        message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
+                        message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
+                        message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
+                        message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
+                        message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
+                        message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
+                        message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
+                        if (view.stats.possession_rt) {
+                          message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                        }
+
+                        message += "</i>"
+                      }
+
+                      const ik = new InlineKeyboard();
+
+                      ik.addRow(
+                          { text: "\u26BD Счет", callback_data: item.id },
+                          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName }
+                        );
+
+                      let ikExport = ik.export();
+
+                      let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport)
+
+                      bot.sendMessage(mainBotName, message, options);
+
+                      bot.on("callback_query", function(query) {
+                        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
+                          .then(function(viewRequest) {
+                            let viewReq = JSON.parse(viewRequest).results[0];
+
+                            let scoresText = viewReq.scores["2"].home + ':' + viewReq.scores["2"].away;
+                            if (viewReq.scores["1"]) {
+                              scoresText += ' (' + viewReq.scores["1"].home + ':' + viewReq.scores["1"].away + ')';
+                            }
+
+                            let finishStr = '';
+
+                            if (viewReq.time_status === '1' ) {
+                              finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+                            } else if (viewReq.time_status === '3') {
+                              finishStr = " \u{1F3C1}";
+                            }
+
+                            bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
+                          })
+
+                      });
+                    })
+                    .catch(function (err) {
+                      console.log('request history failed' + err)
+                    });
                 })
                 .catch(function (err) {
                   console.log('request odds failed' + err)
