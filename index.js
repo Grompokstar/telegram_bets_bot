@@ -148,29 +148,6 @@ function start() {
 
                         bot.sendMessage(mainBotName, message, options);
 
-
-                        bot.on("callback_query", function(query) {
-                          rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
-                            .then(function(viewRequest) {
-                              let viewReq = JSON.parse(viewRequest).results[0];
-
-                              let scoresText = viewReq.scores["2"].home + ':' + viewReq.scores["2"].away;
-                              if (viewReq.scores["1"]) {
-                                scoresText += ' (' + viewReq.scores["1"].home + ':' + viewReq.scores["1"].away + ')';
-                              }
-
-                              let finishStr = '';
-
-                              if (viewReq.time_status === '1' ) {
-                                finishStr = " \u23F0" + viewReq.timer.tm + "\'";
-                              } else if (viewReq.time_status === '3') {
-                                finishStr = " \u{1F3C1}";
-                              }
-
-                              bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
-                            })
-
-                        });
                       })
                       .catch(function (err) {
                         console.log('request history failed' + err)
@@ -187,6 +164,32 @@ function start() {
             console.log('request view failed' + err)
           });
       })
+
+      bot.on("callback_query", function(query) {
+        console.log('callback_query');
+
+        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
+          .then(function(viewRequest) {
+            console.log('запрос callback_view');
+            let viewReq = JSON.parse(viewRequest).results[0];
+
+            let scoresText = viewReq.scores["2"].home + ':' + viewReq.scores["2"].away;
+            if (viewReq.scores["1"]) {
+              scoresText += ' (' + viewReq.scores["1"].home + ':' + viewReq.scores["1"].away + ')';
+            }
+
+            let finishStr = '';
+
+            if (viewReq.time_status === '1' ) {
+              finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+            } else if (viewReq.time_status === '3') {
+              finishStr = " \u{1F3C1}";
+            }
+
+            bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
+          })
+
+      });
     })
     .catch(function (err) {
       console.log('request events failed' + err)
