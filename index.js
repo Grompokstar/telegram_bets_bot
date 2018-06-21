@@ -55,14 +55,6 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-       /* if (item.timer) {
-          return item.timer.tm < 45 && showedEvents.indexOf(item.id) === -1;
-        } else {
-          return false;
-        }*/
-
-        return true
-
         if (item.timer) {
           return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
         } else {
@@ -81,7 +73,7 @@ function start() {
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (true) {
+            if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
@@ -190,7 +182,7 @@ function start() {
 
                         message += "\n\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
                         if (firstHalfOdd) {
-                          message += '(' + firstHalfOdd.handicap + ': ' + firstHalfOdd.over_od + ')'
+                          message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
                         }
 
 
