@@ -16,6 +16,32 @@ setInterval(function() {
   showedEvents = [];
 }, 7200000);
 
+bot.on("callback_query", function(query) {
+  console.log('callback_query');
+
+  rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
+    .then(function(viewRequest) {
+      console.log('запрос callback_view');
+      let viewReq = JSON.parse(viewRequest).results[0];
+
+      let scoresText = viewReq.scores["2"].home + ':' + viewReq.scores["2"].away;
+      if (viewReq.scores["1"]) {
+        scoresText += ' (' + viewReq.scores["1"].home + ':' + viewReq.scores["1"].away + ')';
+      }
+
+      let finishStr = '';
+
+      if (viewReq.time_status === '1' ) {
+        finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+      } else if (viewReq.time_status === '3') {
+        finishStr = " \u{1F3C1}";
+      }
+
+      bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
+    })
+
+});
+
 function start() {
   let filteredResults = [];
 
@@ -35,6 +61,8 @@ function start() {
           return false;
         }*/
 
+        return true
+
         if (item.timer) {
           return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
         } else {
@@ -53,13 +81,28 @@ function start() {
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
+            if (true) {
 
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=3')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
+                  let resultOdds = JSON.parse(response3).results['1_1'];
+                  let firstHalfOdds = JSON.parse(response3).results['1_6'];
                   let odd = jsonOdds[jsonOdds.length - 1];
+                  let resultOdd;
+                  let currentResultOdd;
+                  let firstHalfOdd;
+
+                  if (resultOdds) {
+                    resultOdd = resultOdds[resultOdds.length - 1];
+                    currentResultOdd = resultOdds[0];
+                  }
+
+                  if (firstHalfOdds) {
+                    firstHalfOdd = resultOdds[0];
+                  }
+
                   let handicapArray = odd.handicap.split(',');
 
                   let score = _.find(totalScores, function(scoreItem) {
@@ -90,6 +133,9 @@ function start() {
                         });
 
                         let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
+                        if(isNaN(averageHomeGoals)) {
+                          averageHomeGoals = '-'
+                        }
 
                         let sumAwayGoals = 0;
 
@@ -102,6 +148,9 @@ function start() {
                         });
 
                         let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
+                        if(isNaN(averageAwayGoals)) {
+                          averageAwayGoals = '-'
+                        }
 
                         let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                         let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -119,6 +168,10 @@ function start() {
                         message += odd.over_od + '/' + odd.handicap;
 
                         message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
+                        if (resultOdds) {
+                          message += "\n" + 'Коэфициенты: ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                        }
+
                         if (view.stats) {
                           message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
                           message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
@@ -135,11 +188,18 @@ function start() {
                           message += "</i>"
                         }
 
+                        message += "\n\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+                        if (firstHalfOdd) {
+                          message += '(' + firstHalfOdd.handicap + ': ' + firstHalfOdd.over_od + ')'
+                        }
+
+
+
                         const ik = new InlineKeyboard();
 
                         ik.addRow(
                           { text: "\u26BD Счет", callback_data: item.id },
-                          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + averageHomeGoals + "-v-" + awayName }
+                          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + homeName + "-v-" + awayName }
                         );
 
                         let ikExport = ik.export();
@@ -164,32 +224,6 @@ function start() {
             console.log('request view failed' + err)
           });
       })
-
-      bot.on("callback_query", function(query) {
-        console.log('callback_query');
-
-        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
-          .then(function(viewRequest) {
-            console.log('запрос callback_view');
-            let viewReq = JSON.parse(viewRequest).results[0];
-
-            let scoresText = viewReq.scores["2"].home + ':' + viewReq.scores["2"].away;
-            if (viewReq.scores["1"]) {
-              scoresText += ' (' + viewReq.scores["1"].home + ':' + viewReq.scores["1"].away + ')';
-            }
-
-            let finishStr = '';
-
-            if (viewReq.time_status === '1' ) {
-              finishStr = " \u23F0" + viewReq.timer.tm + "\'";
-            } else if (viewReq.time_status === '3') {
-              finishStr = " \u{1F3C1}";
-            }
-
-            bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
-          })
-
-      });
     })
     .catch(function (err) {
       console.log('request events failed' + err)
