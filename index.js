@@ -6,11 +6,13 @@ const _ = require('lodash');
 const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
 const bot = new TelegramBot(mainToken, {polling: true});
-const testBotName = '@test_telegram_bots';
-const mainBotName = '@roma_best_football_bets';
+const testChannelName = '@test_telegram_bots';
+const mainChannelName = '@roma_best_football_bets';
+const testChannelId = -1001259208814;
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
+
 
 setInterval(function() {
   showedEvents = [];
@@ -18,6 +20,7 @@ setInterval(function() {
 
 bot.on("callback_query", function(query) {
   console.log('callback_query');
+  console.log(query);
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
     .then(function(viewRequest) {
@@ -153,7 +156,7 @@ function start() {
                           goalsArray = item.ss.split('-');
                         }
 
-                        let averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
+                        var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
                         if (averageGoalsFilter >= 3) {
                           let message = '';
@@ -199,7 +202,7 @@ function start() {
 
                           let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
 
-                          bot.sendMessage(mainBotName, message, options);
+                          bot.sendMessage(mainChannelName, message, options);
                         }
 
                       })
