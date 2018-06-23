@@ -153,51 +153,54 @@ function start() {
                           goalsArray = item.ss.split('-');
                         }
 
+                        let averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = '';
-                        message += '\u26BD ' + item.league.name + "\n";
-                        message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        message += odd.over_od + '/' + odd.handicap;
+                        if (averageGoalsFilter >= 3) {
+                          let message = '';
+                          message += '\u26BD ' + item.league.name + "\n";
+                          message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
+                          message += odd.over_od + '/' + odd.handicap;
 
-                        message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
-                        if (resultOdds) {
-                          message += "\n" + 'Коэфициенты: ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
-                        }
-
-                        if (view.stats) {
-                          message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
-                          message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
-                          message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
-                          message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
-                          message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
-                          message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
-                          message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
-                          message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
-                          if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                          message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
+                          if (resultOdds) {
+                            message += "\n" + 'Коэфициенты: ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
                           }
 
-                          message += "</i>"
+                          if (view.stats) {
+                            message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                            message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
+                            message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
+                            message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
+                            message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
+                            message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
+                            message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
+                            message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
+                            if (view.stats.possession_rt) {
+                              message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                            }
+
+                            message += "</i>"
+                          }
+
+                          message += "\n\n";
+                          if (firstHalfOdd) {
+                            message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                          }
+                          message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
+                          const ik = new InlineKeyboard();
+
+                          ik.addRow(
+                            { text: "\u26BD Счет", callback_data: item.id },
+                            { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + homeName + "-v-" + awayName }
+                          );
+
+                          let ikExport = ik.export();
+
+                          let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+
+                          bot.sendMessage(mainBotName, message, options);
                         }
-
-                        message += "\n\n";
-                        if (firstHalfOdd) {
-                          message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
-                        }
-                        message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-
-                        const ik = new InlineKeyboard();
-
-                        ik.addRow(
-                          { text: "\u26BD Счет", callback_data: item.id },
-                          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + homeName + "-v-" + awayName }
-                        );
-
-                        let ikExport = ik.export();
-
-                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
-
-                        bot.sendMessage(mainBotName, message, options);
 
                       })
                       .catch(function (err) {
