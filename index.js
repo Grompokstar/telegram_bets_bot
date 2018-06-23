@@ -92,7 +92,7 @@ function start() {
                   }
 
                   if (firstHalfOdds) {
-                    firstHalfOdd = resultOdds[0];
+                    firstHalfOdd = firstHalfOdds[0];
                   }
 
                   let handicapArray = odd.handicap.split(',');
@@ -180,12 +180,11 @@ function start() {
                           message += "</i>"
                         }
 
-                        message += "\n\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+                        message += "\n\n";
                         if (firstHalfOdd) {
                           message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
                         }
-
-
+                        message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 
                         const ik = new InlineKeyboard();
 
