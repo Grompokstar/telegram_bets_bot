@@ -6,3 +6,4 @@ npm-debug.log
 
 # Others
 package-lock.json
+config/db.js
