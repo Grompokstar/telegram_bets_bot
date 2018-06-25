@@ -78,7 +78,7 @@ function start() {
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-            if ((dangerAttacksKef >= 1 && dangerAttacksKef >= 2.5) ||  (dangerAttacksKef < 1 && dangerAttacksKef < 0.4) && goalsOnTarget >= 3) {
+            if (((dangerAttacksKef >= 1 && dangerAttacksKef >= 2.5) ||  (dangerAttacksKef < 1 && dangerAttacksKef < 0.4)) && goalsOnTarget >= 3) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
