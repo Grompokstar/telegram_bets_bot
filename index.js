@@ -203,8 +203,6 @@ function start() {
 
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
 
-                        bot.sendMessage(mainChannelName, message, options);
-
                         if (averageGoalsFilter >= 3) {
                           bot.sendMessage(zaryadPlusChannel, message, options);
                         } else {
