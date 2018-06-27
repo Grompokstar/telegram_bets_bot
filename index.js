@@ -110,7 +110,6 @@ function start() {
                   console.log(goalsFilter);
 
                   if (goalsFilter >= 2) {
-                    showedEvents.push(item.id);
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -205,8 +204,10 @@ function start() {
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
 
                         if (averageGoalsFilter >= 3) {
+                          showedEvents.push(item.id);
                           bot.sendMessage(zaryadPlusChannel, message, options);
                         } else if (averageGoalsFilterMain >= 3) {
+                          showedEvents.push(item.id);
                           bot.sendMessage(mainChannelName, message, options);
                         }
 
