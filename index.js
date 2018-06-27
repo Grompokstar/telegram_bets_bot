@@ -21,7 +21,7 @@ setInterval(function() {
 
 bot.on("callback_query", function(query) {
   console.log('callback_query');
-  console.log(query);
+  //console.log(query);
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
     .then(function(viewRequest) {
@@ -203,12 +203,16 @@ function start() {
 
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
 
+
+
+                        if (averageGoalsFilterMain >= 3) {
+                          showedEvents.push(item.id);
+                          bot.sendMessage(mainChannelName, message, options);
+                        }
+
                         if (averageGoalsFilter >= 3) {
                           showedEvents.push(item.id);
                           bot.sendMessage(zaryadPlusChannel, message, options);
-                        } else if (averageGoalsFilterMain >= 3) {
-                          showedEvents.push(item.id);
-                          bot.sendMessage(mainChannelName, message, options);
                         }
 
                       })
