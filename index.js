@@ -8,6 +8,7 @@ const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
 const bot = new TelegramBot(mainToken, {polling: true});
 const testChannelName = '@test_telegram_bots';
 const zaryadPlusChannel = '@betbomb_zaryad_plus';
+const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 const mainChannelName = '@roma_best_football_bets';
 const testChannelId = -1001259208814;
 
@@ -167,6 +168,8 @@ function start() {
                         var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
                         let message = '';
+                        let messageCommon = '';
+
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                         message += odd.over_od + '/' + odd.handicap;
@@ -207,13 +210,46 @@ function start() {
 
                         let ikExport = ik.export();
 
+
+
+                        messageCommon += item.league.name + "\u23F0 <i>" + item.timer.tm + "\'</i>\n";
+                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b>";
+                        messageCommon += odd.over_od + '/' + odd.handicap;
+
+                        messageCommon += '\n\n\u26BD ' + averageHomeGoals + '-' + averageAwayGoals;
+                        if (resultOdds) {
+                          messageCommon += "\n\n" + '\u2696 ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                        }
+
+                        if (view.stats) {
+                          if (view.stats.possession_rt) {
+                            messageCommon += "\n\n" + '\u{1F4C8} ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                          }
+                        }
+
+                        messageCommon += "\n\n";
+                        if (firstHalfOdd) {
+                          messageCommon += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                        }
+                        messageCommon += "\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
+                        const ik2 = new InlineKeyboard();
+
+                        ik2.addRow(
+                          { text: "\u26BD Счет", callback_data: item.id },
+                        );
+
+                        let ikExport2 = ik2.export();
+
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                        let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
 
 
 
                         if (averageGoalsFilterMain >= 3) {
                           showedEvents.push(item.id);
                           bot.sendMessage(mainChannelName, message, options);
+                          bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
                         }
 
                         if (averageGoalsFilter >= 3) {
