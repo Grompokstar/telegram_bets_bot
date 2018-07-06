@@ -214,7 +214,7 @@ function start() {
 
                         messageCommon += item.league.name + "\u23F0 <i>" + item.timer.tm + "\'</i>\n";
                         messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b>";
-                        messageCommon += odd.over_od + '/' + odd.handicap;
+                        messageCommon += '\n' + odd.over_od + '/' + odd.handicap;
 
                         messageCommon += '\n\n\u26BD ' + averageHomeGoals + '-' + averageAwayGoals;
                         if (resultOdds) {
