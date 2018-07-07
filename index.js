@@ -61,7 +61,7 @@ function start() {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
         if (item.timer) {
-          return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
+          return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Women') === -1
         } else {
           return false
         }
