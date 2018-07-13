@@ -5,7 +5,8 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot = new TelegramBot(mainToken, {polling: true});
+const testBetBombToken = '565256556:AAHNRNjaVgPgCLy-UDLtkCUD5iu-1bcBkV4';
+const bot = new TelegramBot(testBetBombToken, {polling: true});
 const testChannelName = '@test_telegram_bots';
 const zaryadPlusChannel = '@betbomb_zaryad_plus';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
@@ -16,7 +17,7 @@ const testChannelId = -1001259208814;
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
 
-let count = 1;
+let count = 6;
 
 
 setInterval(function() {
@@ -89,6 +90,7 @@ function start() {
                   let resultOdds = JSON.parse(response3).results['1_1'];
                   let firstHalfOdds = JSON.parse(response3).results['1_6'];
                   let odd = jsonOdds[jsonOdds.length - 1];
+                  let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
                   let firstHalfOdd;
@@ -110,7 +112,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (odd.over_od <= 1.4 && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
+                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) > 2.5) && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -163,7 +165,7 @@ function start() {
 
                         let message = '';
 
-                        message += '#' + count;
+                        message += '#' + count + '\n';
                         count++;
 
                         message += '\u26BD ' + item.league.name + "\n";
@@ -192,10 +194,16 @@ function start() {
                         }
 
                         message += "\n\n";
-                        if (firstHalfOdd) {
-                          message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                        if (item.timer.tm === 20) {
+                          if (firstHalfOdd) {
+                            message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                          }
+                          message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+                        } else if (item.timer.tm === 65) {
+                          message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
+                          message += "\n\u{1F4B0}<b>Тотал матча " + score.scores + '.5 Б</b>';
                         }
-                        message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
 
                         const ik = new InlineKeyboard();
 
