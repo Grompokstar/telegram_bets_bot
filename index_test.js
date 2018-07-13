@@ -10,10 +10,13 @@ const testChannelName = '@test_telegram_bots';
 const zaryadPlusChannel = '@betbomb_zaryad_plus';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 const mainChannelName = '@roma_best_football_bets';
+const mainTestChannel = '@betbomb_test_channel';
 const testChannelId = -1001259208814;
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
+
+let count = 1;
 
 
 setInterval(function() {
@@ -61,8 +64,7 @@ function start() {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
         if (item.timer) {
-          return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Women') === -1
-            && item.league.name.indexOf('Brazil') === -1
+          return (item.timer.tm === 20 || item.timer.tm === 65) && showedEvents.indexOf(item.id) === -1
         } else {
           return false
         }
@@ -79,14 +81,6 @@ function start() {
             let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let dangerAttacksKef;
-
-            if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
-              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
-            } else {
-              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
-            }
-
-            if (dangerAttacksKef >= 2.5 && dangerAttacksDif >= 8 && goalsOnTarget >= 3) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
@@ -114,10 +108,9 @@ function start() {
                     return scoreItem.itemId === item.id
                   });
 
-                  let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
-                  console.log(goalsFilter);
+                  //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (goalsFilter >= 2) {
+                  if (odd.over_od <= 1.4 && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -165,11 +158,13 @@ function start() {
                           goalsArray = item.ss.split('-');
                         }
 
-                        var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
-                        var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
+                        //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
+                        //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
                         let message = '';
-                        let messageCommon = '';
+
+                        message += '#' + count;
+                        count++;
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -211,52 +206,9 @@ function start() {
 
                         let ikExport = ik.export();
 
-
-
-                        messageCommon += item.league.name + "\u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b>";
-                        messageCommon += '\n' + odd.over_od + '/' + odd.handicap;
-
-                        messageCommon += '\n\n\u26BD ' + averageHomeGoals + '-' + averageAwayGoals;
-                        if (resultOdds) {
-                          messageCommon += "\n\n" + '\u2696 ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
-                        }
-
-                        if (view.stats) {
-                          if (view.stats.possession_rt) {
-                            messageCommon += "\n\n" + '\u{1F4C8} ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
-                          }
-                        }
-
-                        messageCommon += "\n\n";
-                        if (firstHalfOdd) {
-                          messageCommon += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
-                        }
-                        messageCommon += "\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-
-                        const ik2 = new InlineKeyboard();
-
-                        ik2.addRow(
-                          { text: "\u26BD Счет", callback_data: item.id },
-                        );
-
-                        let ikExport2 = ik2.export();
-
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
-                        let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
 
-
-
-                        if (averageGoalsFilterMain >= 3) {
-                          showedEvents.push(item.id);
-                          bot.sendMessage(mainChannelName, message, options);
-                          bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
-                        }
-
-                        if (averageGoalsFilter >= 3) {
-                          showedEvents.push(item.id);
-                          bot.sendMessage(zaryadPlusChannel, message, options);
-                        }
+                        bot.sendMessage(mainTestChannel, message, options);
 
                       })
                       .catch(function (err) {
@@ -268,7 +220,6 @@ function start() {
                 .catch(function (err) {
                   console.log('request odds failed' + err)
                 });
-            }
           })
           .catch(function (err) {
             console.log('request view failed' + err)
