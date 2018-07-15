@@ -14,6 +14,7 @@ const testChannelId = -1001259208814;
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
+let count = 4;
 
 
 setInterval(function() {
@@ -171,6 +172,9 @@ function start() {
                         let message = '';
                         let messageCommon = '';
 
+                        message += '#' + count + '\n';
+                        messageCommon += '#' + count + '\n';
+
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                         message += odd.over_od + '/' + odd.handicap;
@@ -251,6 +255,7 @@ function start() {
                           showedEvents.push(item.id);
                           bot.sendMessage(mainChannelName, message, options);
                           bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                          count++;
                         }
 
                         if (averageGoalsFilter >= 3) {
