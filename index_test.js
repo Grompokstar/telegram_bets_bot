@@ -17,7 +17,7 @@ const testChannelId = -1001259208814;
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
 
-let count = 6;
+let count = 333;
 
 
 setInterval(function() {
@@ -26,7 +26,7 @@ setInterval(function() {
 
 bot.on("callback_query", function(query) {
   console.log('callback_query');
-  //console.log(query);
+  console.log(query);
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
     .then(function(viewRequest) {
@@ -41,12 +41,37 @@ bot.on("callback_query", function(query) {
       let finishStr = '';
 
       if (viewReq.time_status === '1' ) {
+
         finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+        bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
+
       } else if (viewReq.time_status === '3') {
-        finishStr = " \u{1F3C1}";
+        let editText = query.message.text;
+
+        if (query.message.text.indexOf('тайма') > 0) {
+          let recommend = query.message.text.substr(query.message.text.indexOf('тайма') + 6, 1);
+          if (parseInt(recommend) + 1 <= parseInt(viewReq.scores["1"].home) + parseInt(viewReq.scores["1"].away)) {
+            editText += '\u2705'
+          } else {
+            editText += '\u274C'
+          }
+        }
+
+        if (query.message.text.indexOf('матча') > 0) {
+          let recommend = query.message.text.substr(query.message.text.indexOf('матча') + 6, 1);
+          if (parseInt(recommend) + 1 <= parseInt(viewReq.scores["2"].home) + parseInt(viewReq.scores["2"].away)) {
+            editText += '\u2705'
+          } else {
+            editText += '\u274C'
+          }
+        }
+
+
+        editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>';
+        bot.editMessageText(editText, {parse_mode: 'HTML', chat_id: query.message.chat.id, message_id: query.message.message_id});
+
       }
 
-      bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
     })
 
 });
