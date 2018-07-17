@@ -88,7 +88,7 @@ function start() {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
         if (item.timer) {
-          return (item.timer.tm === 20) && showedEvents.indexOf(item.id) === -1
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Friendlies') === -1
         } else {
           return false
         }
@@ -187,7 +187,7 @@ function start() {
                         //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = '';
+                        let message = 'Бот 2\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -214,7 +214,7 @@ function start() {
                           }
 
                           if (firstHalfOdd) {
-                            message += '\n\n TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
+                            message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
                           }
 
                           message += "</pre>"

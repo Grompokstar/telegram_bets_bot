@@ -15,7 +15,6 @@ const mainTestChannel = '@betbomb_test_channel';
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
-let count = 35;
 
 
 setInterval(function() {
@@ -88,8 +87,7 @@ function start() {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
         if (item.timer) {
-          return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Women') === -1
-            && item.league.name.indexOf('Brazil') === -1
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Friendlies') === -1
         } else {
           return false
         }
@@ -207,42 +205,48 @@ function start() {
                         var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = '';
                         let messageCommon = '';
 
-                        message += '#' + count + '\n';
-                        messageCommon += '#' + count + '\n';
+                        let message = 'Бот 1\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        message += odd.over_od + '/' + odd.handicap;
-
-                        message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
                         if (resultOdds) {
-                          message += "\n" + 'Коэфициенты: ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                          message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
                         }
+                        message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
+
+                        message += "\n" + 'ЗМ - ' + averageHomeGoals + '-' + averageAwayGoals;
+
 
                         if (view.stats) {
-                          message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                          message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
                           message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
-                          message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
-                          message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
+
+                          message += "\n\n" + 'В створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
+                          message += "\n" + 'Мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
                           message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
                           message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
                           message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
                           message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
                           if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                            message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                           }
 
-                          message += "</i>"
+                          if (firstHalfOdd) {
+                            message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
+                          }
+
+                          message += "</pre>"
                         }
 
                         message += "\n\n";
-                        if (firstHalfOdd) {
-                          message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                        if (item.timer.tm === 20) {
+                          message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+                        } else if (item.timer.tm === 65) {
+                          message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
+                          message += "<b>Тотал матча " + score.scores + '.5 Б</b>';
                         }
-                        message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 
                         const ik = new InlineKeyboard();
 
