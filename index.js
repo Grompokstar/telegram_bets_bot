@@ -296,7 +296,6 @@ function start() {
                         showedEvents.push(item.id);
                         bot.sendMessage(mainTestChannel, message, options);
                         //bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
-                        count++;
 
                        /* if (averageGoalsFilter >= 3) {
                           showedEvents.push(item.id);
