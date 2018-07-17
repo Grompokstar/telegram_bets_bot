@@ -17,8 +17,6 @@ const testChannelId = -1001259208814;
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
 
-let count = 333;
-
 
 setInterval(function() {
   showedEvents = [];
@@ -90,7 +88,7 @@ function start() {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
         if (item.timer) {
-          return (item.timer.tm === 20 || item.timer.tm === 65) && showedEvents.indexOf(item.id) === -1
+          return (item.timer.tm === 20) && showedEvents.indexOf(item.id) === -1
         } else {
           return false
         }
@@ -104,10 +102,11 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-            let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
+            let dangerAttacksSum = parseInt(view.stats.dangerous_attacks[0] + parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let dangerAttacksKef;
 
+            if (dangerAttacksSum >= 18 && goalsOnTarget >= 2) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -190,43 +189,43 @@ function start() {
 
                         let message = '';
 
-                        message += '#' + count + '\n';
-                        count++;
-
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        message += odd.over_od + '/' + odd.handicap;
-
-                        message += "<i>\n\n" + 'Голы за 10 матчей: ' + averageHomeGoals + '-' + averageAwayGoals;
                         if (resultOdds) {
-                          message += "\n" + 'Коэфициенты: ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                          message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
                         }
+                        message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
+
+                        message += "\n" + 'ЗМ - ' + averageHomeGoals + '-' + averageAwayGoals;
+
 
                         if (view.stats) {
-                          message += "\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                          message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
                           message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
-                          message += "\n" + 'Удары в створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
-                          message += "\n" + 'Удары мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
+
+                          message += "\n\n" + 'В створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
+                          message += "\n" + 'Мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
                           message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
                           message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
                           message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
                           message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
                           if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение мячом: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                            message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                           }
 
-                          message += "</i>"
+                          if (firstHalfOdd) {
+                            message += '\n\n TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
+                          }
+
+                          message += "</pre>"
                         }
 
                         message += "\n\n";
                         if (item.timer.tm === 20) {
-                          if (firstHalfOdd) {
-                            message += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
-                          }
-                          message += "\n\u{1F4B0}<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+                          message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
                         } else if (item.timer.tm === 65) {
                           message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
-                          message += "\n\u{1F4B0}<b>Тотал матча " + score.scores + '.5 Б</b>';
+                          message += "<b>Тотал матча " + score.scores + '.5 Б</b>';
                         }
 
 
@@ -253,6 +252,9 @@ function start() {
                 .catch(function (err) {
                   console.log('request odds failed' + err)
                 });
+            }
+
+
           })
           .catch(function (err) {
             console.log('request view failed' + err)

@@ -5,12 +5,13 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot = new TelegramBot(mainToken, {polling: true});
+const bot = new TelegramBot(testToken, {polling: true});
 const testChannelName = '@test_telegram_bots';
 const zaryadPlusChannel = '@betbomb_zaryad_plus';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 const mainChannelName = '@roma_best_football_bets';
 const testChannelId = -1001259208814;
+const mainTestChannel = '@betbomb_test_channel';
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
@@ -141,9 +142,21 @@ function start() {
                   });
 
                   let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
-                  console.log(goalsFilter);
+                  //console.log(goalsFilter);
 
-                  if (goalsFilter >= 2) {
+                  let overOd = parseFloat(odd.over_od);
+                  let handicap = (odd.handicap + '').trim();
+
+                  let handicaps_1_8 = ['2.5, 3.0', '3.0, 3,5'];
+                  let handicaps_1_9 = ['3.5', '3.5, 4.0', '4.0, 4.5', '4.5', '4.5, 5.0', '5.0, 5.5', '5,5', '5.5, 6.0', '6.0, 6.5', '6.5', '6.5, 7.0', '7.5'];
+                  /*console.log(handicap + '/' + overOd);
+                  console.log(handicaps_1_8.indexOf(handicap));
+                  console.log(handicaps_1_9.indexOf(handicap));
+                  console.log(overOd <= 2);
+                  console.log((handicap = '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 2) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 2));*/
+
+
+                  if ((handicap === '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 1.8) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 1.9)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -276,17 +289,15 @@ function start() {
 
 
 
-                        if (averageGoalsFilterMain >= 3) {
-                          showedEvents.push(item.id);
-                          bot.sendMessage(mainChannelName, message, options);
-                          bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
-                          count++;
-                        }
+                        showedEvents.push(item.id);
+                        bot.sendMessage(mainTestChannel, message, options);
+                        //bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                        count++;
 
-                        if (averageGoalsFilter >= 3) {
+                       /* if (averageGoalsFilter >= 3) {
                           showedEvents.push(item.id);
                           bot.sendMessage(zaryadPlusChannel, message, options);
-                        }
+                        }*/
 
                       })
                       .catch(function (err) {
