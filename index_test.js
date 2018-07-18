@@ -102,11 +102,17 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-            let dangerAttacksSum = parseInt(view.stats.dangerous_attacks[0] + parseInt(view.stats.dangerous_attacks[1]));
+            let dangerAttacksDiff = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
+            let allGoals = goalsOnTarget + parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
             let dangerAttacksKef;
+            if (parseInt(view.stats.dangerous_attacks[0]) >= parseInt(view.stats.dangerous_attacks[1])) {
+              dangerAttacksKef = parseInt(view.stats.attacks[0])/parseInt(view.stats.dangerous_attacks[0])
+            } else {
+              dangerAttacksKef = parseInt(view.stats.attacks[1])/parseInt(view.stats.dangerous_attacks[1])
+            }
 
-            if (dangerAttacksSum >= 18 && goalsOnTarget >= 2) {
+            if (goalsOnTarget >= 1 && allGoals >= 5 && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10) && dangerAttacksDiff > 10 && dangerAttacksKef <= 1.5) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -136,7 +142,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) > 2.5) && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
+                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) >= 3 .5 && odd.over_od < 2) && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
