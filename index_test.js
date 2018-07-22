@@ -142,7 +142,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) >= 3 .5 && odd.over_od < 2) && (resultOdd.home_od < 1.4 || resultOdd.away_od < 1.4)) {
+                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) >= 3.5 && odd.over_od < 2) && (resultOdd.home_od <= 1.4 || resultOdd.away_od <= 1.4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {

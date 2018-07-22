@@ -146,7 +146,7 @@ function start() {
                   let handicap = (odd.handicap + '').trim();
 
                   let handicaps_1_8 = ['2.5, 3.0', '3.0, 3,5'];
-                  let handicaps_1_9 = ['3.5', '3.5, 4.0', '4.0, 4.5', '4.5', '4.5, 5.0', '5.0, 5.5', '5,5', '5.5, 6.0', '6.0, 6.5', '6.5', '6.5, 7.0', '7.5'];
+                  let handicaps_1_9 = ['3.5', '3.5, 4.0', '4.0, 4.5', '4.5', '4.5, 5.0', '5.0, 5.5', '5,5', '5.5, 6.0', '6.0, 6.5', '6.5', '6.5, 7.0', '7.0, 7.5', '7.5', '7.5, 8.0', '8.0, 8.5', '8.5'];
                   /*console.log(handicap + '/' + overOd);
                   console.log(handicaps_1_8.indexOf(handicap));
                   console.log(handicaps_1_9.indexOf(handicap));
