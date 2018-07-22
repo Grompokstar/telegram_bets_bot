@@ -10,7 +10,7 @@ REMOTE_RELEASES_PATH=$DEPLOY_PATH
 set -o errexit # Exit on error
 
 # Zip project
-zip $ARCHIVE_NAME -r index.js index_test.js
+zip $ARCHIVE_NAME -r index.js index_test.js index_bot3.js
 
 # Remote commands
 # Make dir
