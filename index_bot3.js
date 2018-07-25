@@ -3,8 +3,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
-const test3Bot = '645860766:AAHi47rWCcEs3ciA6S30dik3ZYH5q12FM-w';
-const bot = new TelegramBot(test3Bot, {polling: true});
+const bot_3_Token = '645860766:AAHi47rWCcEs3ciA6S30dik3ZYH5q12FM-w';
+const bot = new TelegramBot(bot_3_Token, {polling: true});
 const mainTestChannel = '@betbomb_test_channel';
 
 
