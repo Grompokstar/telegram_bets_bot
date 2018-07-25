@@ -87,8 +87,10 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
+        let leagueNameFilter = ['Friendlies', 'Friendly', '70', '80'];
+
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && item.league.name.indexOf('Friendlies') === -1
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && leagueNameFilter.indexOf(item.league.name) === -1
         } else {
           return false
         }
