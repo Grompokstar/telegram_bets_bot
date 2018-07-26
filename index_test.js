@@ -90,7 +90,11 @@ function start() {
         let leagueNameFilter = ['Friendlies', 'Friendly', '70', '80'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && leagueNameFilter.indexOf(item.league.name) === -1
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
+            && item.league.name.indexOf(leagueNameFilter[0]) === -1
+            && item.league.name.indexOf(leagueNameFilter[1]) === -1
+            && item.league.name.indexOf(leagueNameFilter[2]) === -1
+            && item.league.name.indexOf(leagueNameFilter[3]) === -1
         } else {
           return false
         }
