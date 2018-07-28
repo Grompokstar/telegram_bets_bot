@@ -18,7 +18,7 @@ const testChannelId = -1001259208814;
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
 
-MongoClient.connect(db.url, (err, database) => {
+MongoClient.connect("mongodb://localhost:27017/", (err, database) => {
   const myAwesomeDB = database.db('bets');
 
   if (err) return console.log(err);
@@ -70,7 +70,7 @@ MongoClient.connect(db.url, (err, database) => {
           return true
 
           if (item.timer) {
-            return item.timer.tm >= 19 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
+            return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
           } else {
             return false
           }
@@ -88,7 +88,7 @@ MongoClient.connect(db.url, (err, database) => {
               let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
               let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-              if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
+              if (true) {
 
                 rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                   .then(function (response3) {
@@ -122,7 +122,7 @@ MongoClient.connect(db.url, (err, database) => {
                     let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
                     console.log(goalsFilter);
 
-                    if (goalsFilter >= 2) {
+                    if (true) {
                       showedEvents.push(item.id);
 
                       rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
