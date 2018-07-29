@@ -118,7 +118,7 @@ function start() {
                   let firstHalfOdd;
 
                   if (resultOdds) {
-                    resultOdd = resultOdds[resultOdds.length - 1];
+                    props.item.odds['1_1'] = resultOdds[resultOdds.length - 1];
                     currentResultOdd = resultOdds[0];
                   }
 
@@ -134,7 +134,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if ((odd.over_od <= 1.6 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9) ) {
+                  if (odd.over_od <= 1.6 || handicapArray[0] === '3.0' && odd.over_od < 1.7 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9 ) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
