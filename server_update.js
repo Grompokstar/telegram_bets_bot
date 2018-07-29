@@ -17,9 +17,19 @@ MongoClient.connect(db.url, (err, database) => {
   var bulk = DB.collection('notes').initializeOrderedBulkOp();
   var counter = 0;
   DB.collection('notes').find().forEach( function (x) {
-    console.log(x)
-    x.resultView = {result: '1-1'};
-    DB.collection('notes').save(x);
+    if (!x.resultView) {
+      rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + x.id)
+        .then(function(viewRequest) {
+          console.log('запрос callback_view');
+          let viewReq = JSON.parse(viewRequest).results[0];
+
+          if (viewReq.time_status === '3') {
+            x.resultView = viewReq;
+            DB.collection('notes').save(x);
+          }
+
+        })
+    }
   });
 
 })
