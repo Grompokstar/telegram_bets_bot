@@ -6,6 +6,7 @@ const _ = require('lodash');
 const bot_3_Token = '645860766:AAHi47rWCcEs3ciA6S30dik3ZYH5q12FM-w';
 const bot = new TelegramBot(bot_3_Token, {polling: true});
 const mainTestChannel = '@betbomb_test_channel';
+const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -236,9 +237,32 @@ function start() {
 
                         let ikExport = ik.export();
 
-                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                        let messageCommon = '';
 
+                        messageCommon += item.league.name + "\u23F0 \n";
+                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
+
+                        if (firstHalfOdd) {
+                          messageCommon += '\n\n<pre>TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + '</pre>';
+                        }
+
+                        messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
+                        const ik2 = new InlineKeyboard();
+
+                        ik2.addRow(
+                          { text: "\u26BD Счет", callback_data: item.id },
+                        );
+
+                        let ikExport2 = ik2.export();
+
+                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                        let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
+
+
+                        showedEvents.push(item.id);
                         bot.sendMessage(mainTestChannel, message, options);
+                        bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
 
                       })
                       .catch(function (err) {

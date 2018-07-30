@@ -211,8 +211,6 @@ function start() {
                         var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let messageCommon = '';
-
                         let message = 'Бот 1\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
@@ -264,27 +262,16 @@ function start() {
                         let ikExport = ik.export();
 
 
+                        let messageCommon = '';
 
-                        messageCommon += item.league.name + "\u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b>";
-                        messageCommon += '\n' + odd.over_od + '/' + odd.handicap;
+                        messageCommon += item.league.name + "\u23F0 \n";
+                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
 
-                        messageCommon += '\n\n\u26BD ' + averageHomeGoals + '-' + averageAwayGoals;
-                        if (resultOdds) {
-                          messageCommon += "\n\n" + '\u2696 ' + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
-                        }
-
-                        if (view.stats) {
-                          if (view.stats.possession_rt) {
-                            messageCommon += "\n\n" + '\u{1F4C8} ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
-                          }
-                        }
-
-                        messageCommon += "\n\n";
                         if (firstHalfOdd) {
-                          messageCommon += '(' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + ')'
+                          messageCommon += '\n\n<pre>TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + '</pre>';
                         }
-                        messageCommon += "\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
+                        messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 
                         const ik2 = new InlineKeyboard();
 
@@ -298,15 +285,10 @@ function start() {
                         let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
 
 
-
                         showedEvents.push(item.id);
                         bot.sendMessage(mainTestChannel, message, options);
-                        //bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                        bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
 
-                       /* if (averageGoalsFilter >= 3) {
-                          showedEvents.push(item.id);
-                          bot.sendMessage(zaryadPlusChannel, message, options);
-                        }*/
 
                       })
                       .catch(function (err) {
