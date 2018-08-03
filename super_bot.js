@@ -44,9 +44,9 @@ bot.on("callback_query", function(query) {
 
         if (query.message.text.indexOf('Победа') > 0) {
           let recommend = query.message.text.substr(query.message.text.indexOf('Победа') + 7, 1);
-          if (recommend === 1 && parseInt(viewReq.scores["2"].home) > parseInt(viewReq.scores["2"].away)) {
+          if (recommend === '1'&& parseInt(viewReq.scores["2"].home) > parseInt(viewReq.scores["2"].away)) {
             editText += '\u2705'
-          } else if (recommend === 2 && parseInt(viewReq.scores["2"].home) < parseInt(viewReq.scores["2"].away)) {
+          } else if (recommend === '2' && parseInt(viewReq.scores["2"].home) < parseInt(viewReq.scores["2"].away)) {
             editText += '\u2705'
           } else {
             editText += '\u274C'
@@ -74,15 +74,13 @@ function start() {
       let results = JSON.parse(response).results;
 
       filteredResults = _.filter(results, function(item) {
-        totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
-        let totalGoals = parseInt(item.scores[2].home) + parseInt(item.scores[2].away);
+        totalScores.push({itemId: item.id, scores: parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away)});
+        let totalGoals = parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away);
 
         let leagueNameFilter = ['70', '80'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals === 0
-            && item.league.name.indexOf(leagueNameFilter[0]) === -1
-            && item.league.name.indexOf(leagueNameFilter[1]) === -1
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals <= 0
         } else {
           return false
         }
@@ -102,14 +100,14 @@ function start() {
 
             let dangerAttacksKef;
 
-            if (parseInt(item.view.stats.dangerous_attacks[0]) > parseInt(item.view.stats.dangerous_attacks[1])) {
-              dangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[0])/parseInt(item.view.stats.dangerous_attacks[1]);
+            if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
             } else {
-              dangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[1])/parseInt(item.view.stats.dangerous_attacks[0]);
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
 
-            if (dangerAttacksKef >= 2.3) {
+            if (dangerAttacksKef >= 2.5) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -142,7 +140,8 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (odd  && odd.over_od <= 2 && currentResultOdd && parseFloat(currentResultOdd.home_od) >= 1.8 && parseFloat(currentResultOdd.away_od) >= 1.8) {
+                  if (odd  && (odd.over_od <= 1.75 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 2)
+                    && currentResultOdd && parseFloat(currentResultOdd.home_od) >= 1.05 && parseFloat(currentResultOdd.away_od) >= 1.05) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -227,7 +226,7 @@ function start() {
                         }
 
                         message += "\n\n";
-                        if (view.stats.dangerous_attacks[0] > view.stats.dangerous_attacks[1]) {
+                        if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
                           message += "<b>Победа 1</b>";
                         } else  {
                           message += "<b>Победа 2</b>";
