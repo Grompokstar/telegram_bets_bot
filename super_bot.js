@@ -140,8 +140,10 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
+                  let dangerAttacksKef2 = parseInt(item.view.stats.dangerous_attacks[0])/parseInt(item.view.stats.dangerous_attacks[1]);
+
                   if (odd  && (odd.over_od <= 1.75 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 2)
-                    && currentResultOdd && parseFloat(currentResultOdd.home_od) >= 1.05 && parseFloat(currentResultOdd.away_od) >= 1.05) {
+                    && currentResultOdd && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.away_od) >= 1) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {

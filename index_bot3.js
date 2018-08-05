@@ -82,12 +82,18 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['70', '80'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'Women', 'U18', 'U19', 'U20'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
             && item.league.name.indexOf(leagueNameFilter[0]) === -1
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
+            && item.league.name.indexOf(leagueNameFilter[2]) === -1
+            && item.league.name.indexOf(leagueNameFilter[3]) === -1
+            && item.league.name.indexOf(leagueNameFilter[4]) === -1
+            && item.league.name.indexOf(leagueNameFilter[5]) === -1
+            && item.league.name.indexOf(leagueNameFilter[6]) === -1
+            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
@@ -105,7 +111,7 @@ function start() {
             let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (goalsOnTarget >= 3 && attacksSumm >= 40 && dangerAttacksSumm/attacksSumm >= 0.5) {
+            if (goalsOnTarget >= 3 && attacksSumm >= 38 && dangerAttacksSumm/attacksSumm >= 0.5) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -135,7 +141,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (odd.over_od <= 1.6 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9 ) {
+                  if (odd && odd.over_od <= 1.6 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9 && firstHalfOdd && firstHalfOdd.over_od <= 1.95 ) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -186,7 +192,7 @@ function start() {
                         //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = 'Бот 3\n';
+                        let message = 'Бот 3.1\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";

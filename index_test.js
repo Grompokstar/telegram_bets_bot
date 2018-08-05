@@ -87,7 +87,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['Friendlies', 'Friendly', '70', '80'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'Women', 'U18', 'U19', 'U20'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
@@ -95,6 +95,10 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
             && item.league.name.indexOf(leagueNameFilter[3]) === -1
+            && item.league.name.indexOf(leagueNameFilter[4]) === -1
+            && item.league.name.indexOf(leagueNameFilter[5]) === -1
+            && item.league.name.indexOf(leagueNameFilter[6]) === -1
+            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
@@ -118,7 +122,15 @@ function start() {
               dangerAttacksKef = parseInt(view.stats.attacks[1])/parseInt(view.stats.dangerous_attacks[1])
             }
 
-            if (goalsOnTarget >= 1 && allGoals >= 5 && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10) && dangerAttacksDiff > 10 && dangerAttacksKef <= 1.5) {
+            let favoriteDangerAttacksKef;
+            if (parseInt(item.view.stats.dangerous_attacks[0]) > parseInt(item.view.stats.dangerous_attacks[1])) {
+              favoriteDangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[0])/parseInt(item.view.stats.dangerous_attacks[1]);
+            } else {
+              favoriteDangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[1])/parseInt(item.view.stats.dangerous_attacks[0]);
+            }
+
+            if (goalsOnTarget >= 1 && allGoals >= 4 && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
+              && favoriteDangerAttacksKef >= 2.2) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -148,7 +160,7 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if ((odd.over_od <= 1.4 || parseFloat(handicapArray[0]) >= 3.5 && odd.over_od < 2) && (resultOdd.home_od <= 1.4 || resultOdd.away_od <= 1.4)) {
+                  if ((odd.over_od <= 1.42 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.85) && (resultOdd.home_od <= 1.4 || resultOdd.away_od <= 1.4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -199,7 +211,7 @@ function start() {
                         //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = 'Бот 2\n';
+                        let message = 'Бот 1.2\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
