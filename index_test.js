@@ -123,10 +123,10 @@ function start() {
             }
 
             let favoriteDangerAttacksKef;
-            if (parseInt(item.view.stats.dangerous_attacks[0]) > parseInt(item.view.stats.dangerous_attacks[1])) {
-              favoriteDangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[0])/parseInt(item.view.stats.dangerous_attacks[1]);
+            if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
+              favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
             } else {
-              favoriteDangerAttacksKef = parseInt(item.view.stats.dangerous_attacks[1])/parseInt(item.view.stats.dangerous_attacks[0]);
+              favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
             if (goalsOnTarget >= 1 && allGoals >= 4 && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
