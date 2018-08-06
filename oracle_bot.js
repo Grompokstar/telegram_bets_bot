@@ -112,7 +112,7 @@ function start() {
             }
 
 
-            if (dangerAttacksKef >= 1.5) {
+            if (dangerAttacksKef >= 1.8) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -147,8 +147,8 @@ function start() {
 
                   let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-                  if (currentResultOdd && (dangerAttacksKef > 1 && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.home_od) <= 4)
-                    && (dangerAttacksKef < 1 && parseFloat(currentResultOdd.away_od) >= 1 && parseFloat(currentResultOdd.away_od) <= 4)) {
+                  if (currentResultOdd && (dangerAttacksKef2 > 1 && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.home_od) <= 4)
+                    && (dangerAttacksKef2 < 1 && parseFloat(currentResultOdd.away_od) >= 1 && parseFloat(currentResultOdd.away_od) <= 4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -223,10 +223,6 @@ function start() {
                           message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
                           if (view.stats.possession_rt) {
                             message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
-                          }
-
-                          if (firstHalfOdd) {
-                            message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
                           }
 
                           message += "</pre>"

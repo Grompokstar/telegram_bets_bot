@@ -220,10 +220,6 @@ function start() {
                             message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                           }
 
-                          if (firstHalfOdd) {
-                            message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
-                          }
-
                           message += "</pre>"
                         }
 
