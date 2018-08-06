@@ -107,7 +107,7 @@ function start() {
             }
 
 
-            if (dangerAttacksKef >= 2.5) {
+            if (dangerAttacksKef >= 2.3) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
