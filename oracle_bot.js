@@ -3,10 +3,9 @@ const TelegramBot = require('node-telegram-bot-api');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
-const bot_3_Token = '645860766:AAHi47rWCcEs3ciA6S30dik3ZYH5q12FM-w';
-const bot = new TelegramBot(bot_3_Token, {polling: true});
-const mainTestChannel = '@betbomb_test_channel';
-const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
+const token = '648090532:AAE9Wh7ZCFJjEuix5zzFPvPwtPB88Ma3Gsc';
+const bot = new TelegramBot(token, {polling: true});
+const channel = '@betbomb_oracle_bot';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -41,18 +40,11 @@ bot.on("callback_query", function(query) {
       } else if (viewReq.time_status === '3') {
         let editText = query.message.text;
 
-        if (query.message.text.indexOf('тайма') > 0) {
-          let recommend = query.message.text.substr(query.message.text.indexOf('тайма') + 6, 1);
-          if (parseInt(recommend) + 1 <= parseInt(viewReq.scores["1"].home) + parseInt(viewReq.scores["1"].away)) {
+        if (query.message.text.indexOf('Победа') > 0) {
+          let recommend = query.message.text.substr(query.message.text.indexOf('Победа') + 7, 1);
+          if (recommend === '1'&& parseInt(viewReq.scores["2"].home) > parseInt(viewReq.scores["2"].away)) {
             editText += '\u2705'
-          } else {
-            editText += '\u274C'
-          }
-        }
-
-        if (query.message.text.indexOf('матча') > 0) {
-          let recommend = query.message.text.substr(query.message.text.indexOf('матча') + 6, 1);
-          if (parseInt(recommend) + 1 <= parseInt(viewReq.scores["2"].home) + parseInt(viewReq.scores["2"].away)) {
+          } else if (recommend === '2' && parseInt(viewReq.scores["2"].home) < parseInt(viewReq.scores["2"].away)) {
             editText += '\u2705'
           } else {
             editText += '\u274C'
@@ -80,12 +72,13 @@ function start() {
       let results = JSON.parse(response).results;
 
       filteredResults = _.filter(results, function(item) {
-        totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
+        totalScores.push({itemId: item.id, scores: parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away)});
+        let isDraw = parseInt(item.scores['2'].home) === parseInt(item.scores['2'].away);
 
-        let leagueNameFilter = ['50', '60', '70', '80', 'Women', 'U18', 'U19', 'U20'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
+          return item.timer.tm === 65 && showedEvents.indexOf(item.id) === -1 && isDraw
             && item.league.name.indexOf(leagueNameFilter[0]) === -1
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
@@ -93,7 +86,6 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[4]) === -1
             && item.league.name.indexOf(leagueNameFilter[5]) === -1
             && item.league.name.indexOf(leagueNameFilter[6]) === -1
-            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
@@ -111,18 +103,30 @@ function start() {
             let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
 
-            if (goalsOnTarget >= 3 && attacksSumm >= 38 && dangerAttacksSumm/attacksSumm >= 0.5) {
+            let dangerAttacksKef;
+
+            if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
+            } else {
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
+            }
+
+
+            if (dangerAttacksKef >= 1.5) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
                   let firstHalfOdds = JSON.parse(response3).results['1_6'];
-                  let odd = jsonOdds[jsonOdds.length - 1];
+                  let odd;
                   let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
                   let firstHalfOdd;
+                  if (jsonOdds) {
+                    odd = jsonOdds[jsonOdds.length - 1];
+                  }
 
                   if (resultOdds) {
                     resultOdd = resultOdds[resultOdds.length - 1];
@@ -141,7 +145,10 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (odd && (odd.over_od <= 1.6 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9) && firstHalfOdd && firstHalfOdd.over_od <= 1.95 ) {
+                  let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
+
+                  if (currentResultOdd && (dangerAttacksKef > 1 && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.home_od) <= 4)
+                    && (dangerAttacksKef < 1 && parseFloat(currentResultOdd.away_od) >= 1 && parseFloat(currentResultOdd.away_od) <= 4)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -192,7 +199,7 @@ function start() {
                         //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = 'Бот 3.1\n';
+                        let message = 'Бот Оракул\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -226,11 +233,10 @@ function start() {
                         }
 
                         message += "\n\n";
-                        if (item.timer.tm === 20) {
-                          message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-                        } else if (item.timer.tm === 65) {
-                          message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
-                          message += "<b>Тотал матча " + score.scores + '.5 Б</b>';
+                        if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
+                          message += "<b>Победа 2</b>";
+                        } else  {
+                          message += "<b>Победа 1</b>";
                         }
 
 
@@ -243,32 +249,11 @@ function start() {
 
                         let ikExport = ik.export();
 
-                        let messageCommon = 'Бот 3\n';
-
-                        messageCommon += item.league.name + "\n";
-                        messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-
-                        if (firstHalfOdd) {
-                          messageCommon += '\n<pre>TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + '</pre>';
-                        }
-
-                        messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-
-                        const ik2 = new InlineKeyboard();
-
-                        ik2.addRow(
-                          { text: "\u26BD Счет", callback_data: item.id },
-                        );
-
-                        let ikExport2 = ik2.export();
-
                         let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
-                        let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
 
 
                         showedEvents.push(item.id);
-                        bot.sendMessage(mainTestChannel, message, options);
-                        bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                        bot.sendMessage(channel, message, options);
 
                       })
                       .catch(function (err) {
