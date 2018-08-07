@@ -5,7 +5,7 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const token = '648090532:AAE9Wh7ZCFJjEuix5zzFPvPwtPB88Ma3Gsc';
 const bot = new TelegramBot(token, {polling: true});
-const channel = '@betbomb_oracle_bot';
+const channel = '@betbomb_oracle';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -67,12 +67,9 @@ function start() {
   rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-BCLtMmtKT698vk')
     .then(function (response) {
       console.log('запрос events');
-      let totalScores = [];
-
       let results = JSON.parse(response).results;
 
       filteredResults = _.filter(results, function(item) {
-        totalScores.push({itemId: item.id, scores: parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away)});
         let isDraw = parseInt(item.scores['2'].home) === parseInt(item.scores['2'].away);
 
         let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20'];
@@ -99,10 +96,6 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-            let attacksSumm = parseInt(view.stats.attacks[0]) + parseInt(view.stats.attacks[1]);
-            let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
-            let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
-
             let dangerAttacksKef;
 
             if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
@@ -139,16 +132,10 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  let score = _.find(totalScores, function(scoreItem) {
-                    return scoreItem.itemId === item.id
-                  });
-
-                  //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
-
                   let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
+                  console.log(dangerAttacksKef2);
 
-                  if (currentResultOdd && (dangerAttacksKef2 > 1 && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.home_od) <= 4)
-                    && (dangerAttacksKef2 < 1 && parseFloat(currentResultOdd.away_od) >= 1 && parseFloat(currentResultOdd.away_od) <= 4)) {
+                  if (currentResultOdd && ((dangerAttacksKef2 > 1 && parseFloat(currentResultOdd.home_od) >= 1 && parseFloat(currentResultOdd.home_od) <= 4) || (dangerAttacksKef2 < 1 && parseFloat(currentResultOdd.away_od) >= 1 && parseFloat(currentResultOdd.away_od) <= 4))) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {

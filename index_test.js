@@ -263,7 +263,7 @@ function start() {
                         let ikExport = ik.export();
 
 
-                        let messageCommon = 'Бот 2\n';
+                        let messageCommon = 'Бот 1.2\n';
 
                         messageCommon += item.league.name + "\n";
                         messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
