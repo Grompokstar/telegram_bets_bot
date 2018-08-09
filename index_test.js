@@ -211,7 +211,7 @@ function start() {
                         //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = 'Бот 1.2\n';
+                        let message = 'Бот 2.1\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -263,7 +263,7 @@ function start() {
                         let ikExport = ik.export();
 
 
-                        let messageCommon = 'Бот 1.2\n';
+                        let messageCommon = 'Бот 2.1\n';
 
                         messageCommon += item.league.name + "\n";
                         messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";

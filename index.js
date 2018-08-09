@@ -86,7 +86,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['Friendlies', 'Friendly', '70', '80'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'Women', 'U18', 'U19', 'U20'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
@@ -94,6 +94,10 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
             && item.league.name.indexOf(leagueNameFilter[3]) === -1
+            && item.league.name.indexOf(leagueNameFilter[4]) === -1
+            && item.league.name.indexOf(leagueNameFilter[5]) === -1
+            && item.league.name.indexOf(leagueNameFilter[6]) === -1
+            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
@@ -117,7 +121,7 @@ function start() {
               dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
-            if (dangerAttacksKef >= 2.5 && dangerAttacksDif >= 8 && goalsOnTarget >= 3) {
+            if (dangerAttacksDif >= 10 && goalsOnTarget >= 3) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
@@ -151,7 +155,7 @@ function start() {
                   let overOd = parseFloat(odd.over_od);
                   let handicap = (odd.handicap + '').trim();
 
-                  let handicaps_1_8 = ['2.5, 3.0', '3.0, 3,5'];
+                  let handicaps_1_8 = ['2.5, 3.0', '3.0', '3.0, 3,5'];
                   let handicaps_1_9 = ['3.5', '3.5, 4.0', '4.0, 4.5', '4.5', '4.5, 5.0', '5.0, 5.5', '5,5', '5.5, 6.0', '6.0, 6.5', '6.5', '6.5, 7.0', '7.0, 7.5', '7.5', '7.5, 8.0', '8.0, 8.5', '8.5'];
                   /*console.log(handicap + '/' + overOd);
                   console.log(handicaps_1_8.indexOf(handicap));
@@ -160,7 +164,8 @@ function start() {
                   console.log((handicap = '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 2) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 2));*/
 
 
-                  if ((handicap === '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 1.8) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 1.9)) {
+                  if ((handicap === '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 1.7) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 1.9)
+                  && resultOdd &&  (parseFloat(resultOdd.home_od) < 2 || parseFloat(resultOdd.away_od) < 2) && firstHalfOdd && firstHalfOdd.over_od <= 1.95) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                       .then(function (response4) {
@@ -211,7 +216,7 @@ function start() {
                         var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                         var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                        let message = 'Бот 1\n';
+                        let message = 'Бот 1.1\n';
 
                         message += '\u26BD ' + item.league.name + "\n";
                         message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -262,7 +267,7 @@ function start() {
                         let ikExport = ik.export();
 
 
-                        let messageCommon = 'Бот 1\n';
+                        let messageCommon = 'Бот 1.1\n';
 
                         messageCommon += item.league.name + "\n";
                         messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
