@@ -34,7 +34,7 @@ bot.on("callback_query", function(query) {
 
       let finishStr = '';
 
-      if (viewReq.time_status === '1' ) {
+      if (viewReq.time_status !== '3') {
 
         finishStr = " \u23F0" + viewReq.timer.tm + "\'";
         bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
@@ -89,7 +89,7 @@ function start() {
 
       _.forEach(filteredResults, function(item) {
 
-        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
+        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&LNG_ID=73&event_id=' + item.id)
           .then(function (response2) {
             console.log('запрос view');
 
@@ -111,7 +111,7 @@ function start() {
             }
 
 
-            if ((dangerAttacksKef >= 3.2 && advantageTeam === 'home' || dangerAttacksKef >= 1.4 && advantageTeam === 'away') && dangerAttacksDiff >= 3) {
+            if ((dangerAttacksKef >= 3.2 && advantageTeam === 'home' || dangerAttacksKef >= 1.2 && dangerAttacksKef <= 1.5 && advantageTeam === 'away') && dangerAttacksDiff >= 3) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
