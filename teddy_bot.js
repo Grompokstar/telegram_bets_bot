@@ -103,7 +103,7 @@ function start() {
             }
 
 
-            if (dangerAttacksDiff >= 3 && dangerAttacksKef >= 1.2 && advantageTeam === 'away') {
+            if (dangerAttacksDiff >= 3 && dangerAttacksKef >= 1.2 && dangerAttacksKef <= 1.5 && advantageTeam === 'away') {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -134,8 +134,8 @@ function start() {
 
                   //let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-                  if (oddsKef >= 0.3 && oddsKef <= 1.4 && odd &&
-                    (odd.over_od <= 1.75 && parseFloat(handicapArray[0]) <= 2.5 || odd.over_od < 2 && parseFloat(handicapArray[0]) > 2.5)
+                  if (oddsKef >= 0.5 && oddsKef <= 1.2 && odd &&
+                    (odd.over_od <= 1.75 && parseFloat(handicapArray[0]) <= 2.5 || odd.over_od < 1.95 && parseFloat(handicapArray[0]) > 3 || parseFloat(startTotalOdd.over_od) < 1.9 && parseInt(handicapArray[0]) === 3)
                     && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 1.8 && parseFloat(currentResultOdd.away_od) <= 5)) {
 
                     rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
