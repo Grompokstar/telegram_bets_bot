@@ -149,111 +149,64 @@ function start() {
                   if (odd  && (odd.over_od <= 1.75 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 2)
                     && currentResultOdd && ((dangerAttacksKef2 > 1 && parseFloat(currentResultOdd.home_od) >= 1.2 && parseFloat(currentResultOdd.home_od) <= 4) || (dangerAttacksKef2 < 1 && parseFloat(currentResultOdd.away_od) >= 1.8 && parseFloat(currentResultOdd.away_od) <= 5))) {
 
-                    rp('https://api.betsapi.com/v1/event/history?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
-                      .then(function (response4) {
-                        console.log('запрос history');
-                        let homeArray = JSON.parse(response4).results['home'];
-                        let awayArray = JSON.parse(response4).results['away'];
+                    let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
+                    let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
 
-                        let sumHomeGoals = 0;
+                    let goalsArray;
 
-                        _.forEach(homeArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
+                    if (item.ss) {
+                      goalsArray = item.ss.split('-');
+                    }
 
-                            sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
+                    let message = 'Супер Бот 1.2\n';
 
-                        });
-
-                        let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
-                        if(isNaN(averageHomeGoals)) {
-                          averageHomeGoals = '-'
-                        }
-
-                        let sumAwayGoals = 0;
-
-                        _.forEach(awayArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
-
-                            sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
-                        });
-
-                        let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
-                        if(isNaN(averageAwayGoals)) {
-                          averageAwayGoals = '-'
-                        }
-
-                        let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
-                        let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
-
-                        let goalsArray;
-
-                        if (item.ss) {
-                          goalsArray = item.ss.split('-');
-                        }
-
-                        //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
-                        //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
-
-                        let message = 'Супер Бот 1.2\n';
-
-                        message += '\u26BD ' + item.league.name + "\n";
-                        message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                        if (resultOdds) {
-                          message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
-                        }
-                        message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
-
-                        message += "\n" + 'ЗМ - ' + averageHomeGoals + '-' + averageAwayGoals;
+                    message += '\u26BD ' + item.league.name + "\n";
+                    message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
+                    if (resultOdds) {
+                      message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                    }
+                    message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
 
 
-                        if (view.stats) {
-                          message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
-                          message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
+                    if (view.stats) {
+                      message += "\n\n" + 'Атаки: ' + view.stats.attacks[0] + '-' + view.stats.attacks[1];
+                      message += "\n" + 'Опасные атаки: ' + view.stats.dangerous_attacks[0] + '-' + view.stats.dangerous_attacks[1];
 
-                          message += "\n\n" + 'В створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
-                          message += "\n" + 'Мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
-                          message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
-                          message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
-                          message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
-                          message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
-                          if (view.stats.possession_rt) {
-                            message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
-                          }
+                      message += "\n\n" + 'В створ: ' + view.stats.on_target[0] + '-' + view.stats.on_target[1];
+                      message += "\n" + 'Мимо ворот: ' + view.stats.off_target[0] + '-' + view.stats.off_target[1];
+                      message += "\n" + 'Угловые: ' + view.stats.corners[0] + '-' + view.stats.corners[1];
+                      message += "\n" + 'Пенальти: ' + view.stats.penalties[0] + '-' + view.stats.penalties[1];
+                      message += "\n" + 'Красные: ' + view.stats.redcards[0] + '-' + view.stats.redcards[1];
+                      message += "\n" + 'Желтые: ' + view.stats.yellowcards[0] + '-' + view.stats.yellowcards[1];
+                      if (view.stats.possession_rt) {
+                        message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
+                      }
 
-                          message += "</pre>"
-                        }
+                      message += "</pre>"
+                    }
 
-                        message += "\n\n";
-                        if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
-                          message += "<b>Победа 1</b>";
-                        } else  {
-                          message += "<b>Победа 2</b>";
-                        }
-
-
-                        const ik = new InlineKeyboard();
-
-                        ik.addRow(
-                          { text: "\u26BD Счет", callback_data: item.id },
-                          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + homeName + "-v-" + awayName }
-                        );
-
-                        let ikExport = ik.export();
-
-                        let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                    message += "\n\n";
+                    if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
+                      message += "<b>Победа 1</b>";
+                    } else  {
+                      message += "<b>Победа 2</b>";
+                    }
 
 
-                        showedEvents.push(item.id);
-                        bot.sendMessage(testChannelId, message, options);
+                    const ik = new InlineKeyboard();
 
-                      })
-                      .catch(function (err) {
-                        console.log('request history failed' + err)
-                      });
+                    ik.addRow(
+                      { text: "\u26BD Счет", callback_data: item.id },
+                      { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + item.id + "/" + homeName + "-v-" + awayName }
+                    );
+
+                    let ikExport = ik.export();
+
+                    let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+
+
+                    showedEvents.push(item.id);
+                    bot.sendMessage(testChannelId, message, options);
                   }
 
                 })
