@@ -51,10 +51,21 @@ bot.on("callback_query", function(query) {
           }
         }
 
-
         editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>';
-        bot.editMessageText(editText, {parse_mode: 'HTML', chat_id: query.message.chat.id, message_id: query.message.message_id});
 
+        let homeName = viewReq.home.name ? viewReq.home.name.split(' ').join('-') : '';
+        let awayName = viewReq.away.name ? viewReq.away.name.split(' ').join('-') : '';
+        const ik = new InlineKeyboard();
+
+        ik.addRow(
+          { text: "\u{1F30F} Подробно", url: "https://ru.betsapi.com/r/" + viewReq.id + "/" + homeName + "-v-" + awayName }
+        );
+
+        let ikExport = ik.export();
+
+        let options = Object.assign({}, {parse_mode: 'HTML', chat_id: query.message.chat.id, message_id: query.message.message_id}, ikExport);
+
+        bot.editMessageText(editText, options);
       }
 
     })
