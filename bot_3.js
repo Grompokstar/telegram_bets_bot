@@ -160,40 +160,6 @@ function start() {
 
                   if (odd && (odd.over_od <= 1.6 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.9) && firstHalfOdd && firstHalfOdd.over_od <= 1.95 ) {
 
-                    /*console.log('запрос history');
-                        let homeArray = JSON.parse(response4).results['home'];
-                        let awayArray = JSON.parse(response4).results['away'];
-
-                        let sumHomeGoals = 0;
-
-                        _.forEach(homeArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
-
-                            sumHomeGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
-
-                        });
-
-                        let averageHomeGoals = (sumHomeGoals / homeArray.length).toFixed(1);
-                        if(isNaN(averageHomeGoals)) {
-                          averageHomeGoals = '-'
-                        }
-
-                        let sumAwayGoals = 0;
-
-                        _.forEach(awayArray, function (match) {
-                          if (match.ss) {
-                            let scoreArray = match.ss.split('-');
-
-                            sumAwayGoals += parseInt(scoreArray[0]) + parseInt(scoreArray[1])
-                          }
-                        });
-
-                        let averageAwayGoals = (sumAwayGoals / awayArray.length).toFixed(1);
-                        if(isNaN(averageAwayGoals)) {
-                          averageAwayGoals = '-'
-                        }*/
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -203,9 +169,6 @@ function start() {
                     if (item.ss) {
                       goalsArray = item.ss.split('-');
                     }
-
-                    //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
-                    //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
                     let message = 'Бот 3.1\n';
 
