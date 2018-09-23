@@ -3,10 +3,9 @@ const TelegramBot = require('node-telegram-bot-api');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
-const bot_3_Token = '645860766:AAHi47rWCcEs3ciA6S30dik3ZYH5q12FM-w';
+const bot_3_Token = '648131417:AAFFAJqwgIPYzfuCQIRkWLlbAl9xZLDJpA8';
 const bot = new TelegramBot(bot_3_Token, {polling: true});
-const mainTestChannel = '@betbomb_test_channel';
-const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
+const bot3TestChannel = '@betbomb_bot3_test';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -249,8 +248,7 @@ function start() {
 
 
                     showedEvents.push(item.id);
-                    bot.sendMessage(mainTestChannel, message, options);
-                    bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                    bot.sendMessage(bot3TestChannel, message, options);
                   }
 
                 })
