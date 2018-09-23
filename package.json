@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "export $(cat ./config/deploy/.prod | xargs) && ./bin/deploy.sh",
-    "deploy_test": "export $(cat ./config/deploy/.test | xargs) && ./bin/deploy.sh"
+    "deploy_test": "export $(cat ./config/deploy/.test | xargs) && ./bin/deploy.sh",
+    "deploy_new": "export $(cat ./config/deploy/.new_server | xargs) && ./bin/deploy.sh"
   },
   "author": "",
   "license": "ISC",
