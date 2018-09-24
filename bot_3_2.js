@@ -100,7 +100,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
@@ -128,8 +128,10 @@ function start() {
             let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let goalsOffTarget = parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
+            let allGoals = 0;
+            allGoals = goalsOnTarget + goalsOffTarget;
 
-            if (goalsOnTarget >= 3 && goalsOffTarget >= 1 && attacksSumm >= 32 && dangerAttacksSumm/attacksSumm >= 0.5) {
+            if (goalsOnTarget >= 3 && goalsOffTarget >= 1 && allGoals >= 5 && attacksSumm >= 32 && dangerAttacksSumm/attacksSumm >= 0.5 && dangerAttacksSumm/attacksSumm <= 0.8) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
