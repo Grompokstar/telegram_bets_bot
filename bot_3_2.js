@@ -6,6 +6,8 @@ const _ = require('lodash');
 const bot_3_Token = '677143481:AAGkPTg3zUhGSe0cwP0dSFgk_ah8KS0q6aE';
 const bot = new TelegramBot(bot_3_Token, {polling: true});
 const bot3TestChannel = '@betbomb_bot3_test';
+const mainTestChannel = '@betbomb_test_channel';
+const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -224,7 +226,7 @@ function start() {
 
                     let ikExport = ik.export();
 
-                    let messageCommon = 'Бот 3.1\n';
+                    let messageCommon = 'Бот 3.2\n';
 
                     messageCommon += item.league.name + "\n";
                     messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -249,6 +251,8 @@ function start() {
 
                     showedEvents.push(item.id);
                     bot.sendMessage(bot3TestChannel, message, options);
+                    bot.sendMessage(mainTestChannel, message, options);
+                    bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
                   }
 
                 })
