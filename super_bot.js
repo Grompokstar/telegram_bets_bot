@@ -87,13 +87,19 @@ function start() {
       let results = JSON.parse(response).results;
 
       filteredResults = _.filter(results, function(item) {
-        totalScores.push({itemId: item.id, scores: parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away)});
         let totalGoals = parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away);
 
-        let leagueNameFilter = ['70', '80'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals <= 0
+            && item.league.name.indexOf(leagueNameFilter[0]) === -1
+            && item.league.name.indexOf(leagueNameFilter[1]) === -1
+            && item.league.name.indexOf(leagueNameFilter[2]) === -1
+            && item.league.name.indexOf(leagueNameFilter[3]) === -1
+            && item.league.name.indexOf(leagueNameFilter[4]) === -1
+            && item.league.name.indexOf(leagueNameFilter[5]) === -1
+            && item.league.name.indexOf(leagueNameFilter[6]) === -1
         } else {
           return false
         }
@@ -123,8 +129,17 @@ function start() {
               advantageTeam = 'away'
             }
 
+            let attacksRatioKefHome;
+            let attacksRatioKefAway;
 
-            if ((dangerAttacksKef >= 3.2 && advantageTeam === 'home' || dangerAttacksKef >= 1.2 && dangerAttacksKef <= 1.5 && advantageTeam === 'away') && dangerAttacksDiff >= 3) {
+            if (parseInt(view.stats.attacks[0]) > parseInt(view.stats.attacks[1])) {
+              attacksRatioKefHome = parseInt(view.stats.attacks[0])/parseInt(view.stats.attacks[1]);
+            } else {
+              attacksRatioKefAway = parseInt(view.stats.attacks[1])/parseInt(view.stats.attacks[0]);
+            }
+
+
+            if (advantageTeam === 'home' && dangerAttacksSumm >= 18 && dangerAttacksKef <= 2.8 && attacksRatioKefHome <= 1.9 ) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -151,16 +166,13 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  let score = _.find(totalScores, function(scoreItem) {
-                    return scoreItem.itemId === item.id
-                  });
-
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
                   let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-                  if (odd  && (odd.over_od <= 1.75 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 2)
-                    && currentResultOdd && ((dangerAttacksKef2 > 1 && parseFloat(currentResultOdd.home_od) >= 1.2 && parseFloat(currentResultOdd.home_od) <= 4) || (dangerAttacksKef2 < 1 && parseFloat(currentResultOdd.away_od) >= 1.8 && parseFloat(currentResultOdd.away_od) <= 5))) {
+                  if (odd && (parseFloat(handicapArray[0]) <= 2.5 && odd.over_od <= 1.6 || parseFloat(startTotalOdd.over_od) < 1.8 && parseInt(handicapArray[0]) === 3 || odd.over_od < 1.9 && parseFloat(handicapArray[0]) > 3 )
+                    && currentResultOdd && (parseFloat(currentResultOdd.home_od) >= 1.5 && parseFloat(currentResultOdd.home_od) <= 7)
+                    && resultOdd && parseFloat(resultOdd.home_od) >= 1.66 && parseFloat(resultOdd.home_od) <= 5) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -171,7 +183,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Супер Бот 1.2\n';
+                    let message = 'Супер Бот 2.1\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
