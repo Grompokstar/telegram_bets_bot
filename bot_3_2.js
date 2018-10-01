@@ -37,7 +37,6 @@ bot.on("callback_query", function(query) {
 
     return goalTimes;
   }
-  //console.log(query);
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
     .then(function(viewRequest) {
