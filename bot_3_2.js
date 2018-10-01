@@ -20,6 +20,23 @@ setInterval(function() {
 
 bot.on("callback_query", function(query) {
   console.log('callback_query');
+
+  function GoalTimes(events) {
+    let goalEvents = [];
+    let goalTimes = [];
+
+    _.forEach(events, function(event) {
+      if (event.text.indexOf(' Goal ') >=0 ) {
+        goalEvents.push(event.text)
+      };
+    });
+
+    _.forEach(goalEvents, function(event) {
+      goalTimes.push(event.substring(0, event.indexOf('\'')));
+    })
+
+    return goalTimes;
+  }
   //console.log(query);
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
@@ -33,10 +50,14 @@ bot.on("callback_query", function(query) {
       }
 
       let finishStr = '';
+      let goalTimes = GoalTimes(viewReq.events);
 
       if (viewReq.time_status === '1' ) {
 
-        finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+        finishStr = " \u23F0" + viewReq.timer.tm + "\'\n";
+        _.forEach(goalTimes, function(time) {
+          finishStr += (time + '\'\u26BD ')
+        })
         bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
 
       } else if (viewReq.time_status === '3') {
@@ -61,7 +82,10 @@ bot.on("callback_query", function(query) {
         }
 
 
-        editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>';
+        editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>\n';
+        _.forEach(goalTimes, function(time) {
+          editText += (time + '\'\u26BD ')
+        })
 
         if (editText.length > 200) {
           let homeName = viewReq.home.name ? viewReq.home.name.split(' ').join('-') : '';
@@ -111,6 +135,7 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[4]) === -1
             && item.league.name.indexOf(leagueNameFilter[5]) === -1
             && item.league.name.indexOf(leagueNameFilter[6]) === -1
+            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
