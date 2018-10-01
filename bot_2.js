@@ -59,7 +59,7 @@ bot.on("callback_query", function(query) {
 
         finishStr = " \u23F0" + viewReq.timer.tm + "\'\n";
         _.forEach(goalTimes, function(time) {
-          finishStr += (time + '\'\u26BD ')
+          finishStr += (' \u26BD' + time + '\' ')
         })
         bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
 
@@ -87,7 +87,7 @@ bot.on("callback_query", function(query) {
 
         editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>\n';
         _.forEach(goalTimes, function(time) {
-          editText += (time + '\'\u26BD ')
+          editText += (' \u26BD' + time + '\' ')
         })
 
         if (editText.length > 200) {
