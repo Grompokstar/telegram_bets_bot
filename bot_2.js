@@ -127,7 +127,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20'];
+        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
@@ -138,6 +138,7 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[4]) === -1
             && item.league.name.indexOf(leagueNameFilter[5]) === -1
             && item.league.name.indexOf(leagueNameFilter[6]) === -1
+            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
@@ -170,9 +171,9 @@ function start() {
               favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
-            if ((goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5) && goalsOffTarget >= 1
+            if ((goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5) && goalsOffTarget >= 2
               && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
-              && favoriteDangerAttacksKef >= 2.3) {
+              && favoriteDangerAttacksKef >= 2.9) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
@@ -180,7 +181,7 @@ function start() {
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
                   let firstHalfOdds = JSON.parse(response3).results['1_6'];
-                  let odd = jsonOdds[jsonOdds.length - 1];
+                  let startTotalOdd = jsonOdds[jsonOdds.length - 1];
                   let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
@@ -195,7 +196,7 @@ function start() {
                     firstHalfOdd = firstHalfOdds[0];
                   }
 
-                  let handicapArray = odd.handicap.split(',');
+                  let handicapArray = startTotalOdd.handicap.split(',');
 
                   let score = _.find(totalScores, function(scoreItem) {
                     return scoreItem.itemId === item.id
@@ -203,7 +204,9 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if ((odd.over_od <= 1.45 || parseFloat(handicapArray[0]) > 2.5 && odd.over_od < 1.85) && (resultOdd.home_od <= 1.4 || resultOdd.away_od <= 1.4)) {
+                  if (parseFloat(startTotalOdd.over_od) <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
+                    || parseFloat(startTotalOdd.over_od) < 1.75 && parseInt(handicapArray[0]) === 3
+                    || parseFloat(startTotalOdd.over_od) < 1.95 && parseFloat(handicapArray[0]) > 3) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -217,7 +220,7 @@ function start() {
                     //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                     //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                    let message = 'Бот 2.2\n';
+                    let message = 'Бот 2.3\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -267,7 +270,7 @@ function start() {
                     let ikExport = ik.export();
 
 
-                    let messageCommon = 'Бот 2.2\n';
+                    let messageCommon = 'Бот 2.3\n';
 
                     messageCommon += item.league.name + "\n";
                     messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
