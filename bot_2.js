@@ -206,7 +206,7 @@ function start() {
 
                   if (parseFloat(startTotalOdd.over_od) <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
                     || parseFloat(startTotalOdd.over_od) < 1.75 && parseInt(handicapArray[0]) === 3
-                    || parseFloat(startTotalOdd.over_od) < 1.95 && parseFloat(handicapArray[0]) > 3) {
+                    || parseFloat(startTotalOdd.over_od) < 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
