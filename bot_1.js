@@ -172,6 +172,7 @@ function start() {
                   let resultOdds = JSON.parse(response3).results['1_1'];
                   //let firstHalfOdds = JSON.parse(response3).results['1_6'];
                   let odd = jsonOdds[jsonOdds.length - 1];
+                  let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
 
@@ -233,12 +234,9 @@ function start() {
                     }
 
                     message += "\n\n";
-                    if (item.timer.tm === 20) {
-                      message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-                    } else if (item.timer.tm === 65) {
-                      message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
-                      message += "<b>Тотал матча " + score.scores + '.5 Б</b>';
-                    }
+
+                    message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
+                    message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 
                     const ik = new InlineKeyboard();
 
