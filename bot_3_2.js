@@ -156,7 +156,7 @@ function start() {
             allGoals = goalsOnTarget + goalsOffTarget;
 
             if (goalsOnTarget >= 3 && goalsOffTarget >= 1 && allGoals >= 5 && attacksSumm >= 32 && dangerAttacksSumm/attacksSumm >= 0.48 && dangerAttacksSumm/attacksSumm <= 0.68) {
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
@@ -173,6 +173,7 @@ function start() {
                   }
 
                   let handicapArray = odd.handicap.split(',');
+                  let startTotalOdd = parseFloat(odd.over_od);
 
                   let score = _.find(totalScores, function(scoreItem) {
                     return scoreItem.itemId === item.id
@@ -180,9 +181,11 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (odd && (odd.over_od <= 1.45 || parseFloat(handicapArray[0]) === 3 && odd.over_od < 1.85
-                    || parseFloat(odd.over_od) < 1.95 && parseFloat(handicapArray[0]) > 3)
-                    && ((dangerAttacksKef > 1 && parseFloat(currentResultOdd.home_od) <= 1.7) || (dangerAttacksKef <= 1 && parseFloat(currentResultOdd.away_od) <= 1.7))) {
+                  if (startTotalOdd && (startTotalOdd <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
+                      || startTotalOdd < 1.85 && parseFloat(handicapArray[0]) === 3
+                      || startTotalOdd < 1.95 && parseFloat(handicapArray[0]) > 3)
+                      && ((dangerAttacksKef > 1 && parseFloat(currentResultOdd.home_od) <= 1.7)
+                        || (dangerAttacksKef <= 1 && parseFloat(currentResultOdd.away_od) <= 1.7))) {
 
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';

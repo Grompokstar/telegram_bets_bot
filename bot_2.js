@@ -175,13 +175,13 @@ function start() {
               && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
               && favoriteDangerAttacksKef >= 2.9) {
 
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
                   //let firstHalfOdds = JSON.parse(response3).results['1_6'];
-                  let startTotalOdd = jsonOdds[jsonOdds.length - 1];
+                  let odd = jsonOdds[jsonOdds.length - 1];
                   let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
@@ -192,6 +192,7 @@ function start() {
                   }
 
                   let handicapArray = startTotalOdd.handicap.split(',');
+                  let startTotalOdd = parseFloat(odd.over_od);
 
                   let score = _.find(totalScores, function(scoreItem) {
                     return scoreItem.itemId === item.id
@@ -199,9 +200,9 @@ function start() {
 
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
 
-                  if (parseFloat(startTotalOdd.over_od) <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
-                    || parseFloat(startTotalOdd.over_od) < 1.75 && parseInt(handicapArray[0]) === 3
-                    || parseFloat(startTotalOdd.over_od) < 2 && parseFloat(handicapArray[0]) > 3) {
+                  if (startTotalOdd <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
+                    || startTotalOdd < 1.75 && parseInt(handicapArray[0]) === 3
+                    || startTotalOdd < 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';

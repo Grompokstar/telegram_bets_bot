@@ -159,7 +159,7 @@ function start() {
 
             if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 2) {
 
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
@@ -181,9 +181,9 @@ function start() {
 
                   let startTotalOdd = parseFloat(odd.over_od);
 
-                  if (parseFloat(startTotalOdd.over_od) < 2 && parseFloat(handicapArray[0]) <= 2.5
-                    || parseFloat(startTotalOdd.over_od) <= 2 && parseInt(handicapArray[0]) === 3
-                    || parseFloat(startTotalOdd.over_od) <= 2 && parseFloat(handicapArray[0]) > 3) {
+                  if (startTotalOdd < 2 && parseFloat(handicapArray[0]) <= 2.5
+                    || startTotalOdd <= 2 && parseInt(handicapArray[0]) === 3
+                    || startTotalOdd <= 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';

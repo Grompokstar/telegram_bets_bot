@@ -165,7 +165,7 @@ function start() {
 
             if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 1) {
 
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
@@ -181,6 +181,7 @@ function start() {
                   }
 
                   let handicapArray = odd.handicap.split(',');
+                  let startTotalOdd = parseFloat(odd.over_od);
 
                   let score = _.find(totalScores, function(scoreItem) {
                     return scoreItem.itemId === item.id
@@ -189,21 +190,10 @@ function start() {
                   //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
                   //console.log(goalsFilter);
 
-                  let startTotalOdd = parseFloat(odd.over_od);
-                  let handicap = (odd.handicap + '').trim();
 
-                  let handicaps_1_8 = ['2.5, 3.0', '3.0', '3.0, 3,5'];
-                  let handicaps_1_9 = ['3.5', '3.5, 4.0', '4.0, 4.5', '4.5', '4.5, 5.0', '5.0, 5.5', '5,5', '5.5, 6.0', '6.0, 6.5', '6.5', '6.5, 7.0', '7.0, 7.5', '7.5', '7.5, 8.0', '8.0, 8.5', '8.5'];
-                  /*console.log(handicap + '/' + overOd);
-                  console.log(handicaps_1_8.indexOf(handicap));
-                  console.log(handicaps_1_9.indexOf(handicap));
-                  console.log(overOd <= 2);
-                  console.log((handicap = '2.5' && overOd < 1.6) || (handicaps_1_8.indexOf(handicap) >= 0 && overOd <= 2) || (handicaps_1_9.indexOf(handicap) >= 0 && overOd <= 2));*/
-
-
-                  if ((parseFloat(startTotalOdd.over_od) <= 1.65 && parseFloat(handicapArray[0]) <= 2.5
-                    || parseFloat(startTotalOdd.over_od) <= 1.75 && parseInt(handicapArray[0]) === 3
-                    || parseFloat(startTotalOdd.over_od) <= 1.95 && parseFloat(handicapArray[0]) > 3)
+                  if ((startTotalOdd <= 1.65 && parseFloat(handicapArray[0]) <= 2.5
+                    || startTotalOdd <= 1.75 && parseInt(handicapArray[0]) === 3
+                    || startTotalOdd <= 1.95 && parseFloat(handicapArray[0]) > 3)
                     && resultOdd &&  (parseFloat(resultOdd.home_od) < 1.65 || parseFloat(resultOdd.away_od) < 1.65)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
