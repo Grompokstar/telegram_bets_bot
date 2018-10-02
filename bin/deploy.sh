@@ -10,7 +10,7 @@ REMOTE_RELEASES_PATH=$DEPLOY_PATH
 set -o errexit # Exit on error
 
 # Zip project
-zip $ARCHIVE_NAME -r bot_1.js bot_2.js bot_3.js bot_3_2.js index_timetable.js super_bot.js oracle_bot.js teddy_bot.js
+zip $ARCHIVE_NAME -r bot_1.js bot_2.js bot_3.js bot_3_2.js bot_4.js index_timetable.js super_bot.js oracle_bot.js teddy_bot.js
 
 # Remote commands
 # Make dir

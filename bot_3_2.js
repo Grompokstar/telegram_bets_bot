@@ -161,21 +161,15 @@ function start() {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
-                  let firstHalfOdds = JSON.parse(response3).results['1_6'];
                   let odd = jsonOdds[jsonOdds.length - 1];
                   let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
-                  let firstHalfOdd;
                   let dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
                   if (resultOdds) {
                     resultOdd = resultOdds[resultOdds.length - 1];
                     currentResultOdd = resultOdds[0];
-                  }
-
-                  if (firstHalfOdds) {
-                    firstHalfOdd = firstHalfOdds[0];
                   }
 
                   let handicapArray = odd.handicap.split(',');
@@ -227,10 +221,6 @@ function start() {
                         message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                       }
 
-                      if (firstHalfOdd) {
-                        message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
-                      }
-
                       message += "</pre>"
                     }
 
@@ -256,10 +246,6 @@ function start() {
 
                     messageCommon += item.league.name + "\n";
                     messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-
-                    if (firstHalfOdd) {
-                      messageCommon += '\n<pre>TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + '</pre>';
-                    }
 
                     messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 

@@ -239,10 +239,6 @@ function start() {
                         message += "\n" + 'Владение: ' + view.stats.possession_rt[0] + '-' + view.stats.possession_rt[1];
                       }
 
-                      if (firstHalfOdd) {
-                        message += '\n\nTБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap;
-                      }
-
                       message += "</pre>"
                     }
 
@@ -268,10 +264,6 @@ function start() {
 
                     messageCommon += item.league.name + "\n";
                     messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-
-                    if (firstHalfOdd) {
-                      messageCommon += '\n<pre>TБ 1 тайм - ' + firstHalfOdd.over_od + '/' + firstHalfOdd.handicap + '</pre>';
-                    }
 
                     messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 

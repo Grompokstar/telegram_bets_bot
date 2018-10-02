@@ -3,16 +3,9 @@ const TelegramBot = require('node-telegram-bot-api');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
-const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
-const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
-const bot_2_token = '565256556:AAHNRNjaVgPgCLy-UDLtkCUD5iu-1bcBkV4';
-const bot = new TelegramBot(bot_2_token, {polling: true});
-const testChannelName = '@test_telegram_bots';
-const zaryadPlusChannel = '@betbomb_zaryad_plus';
-const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
-const mainChannelName = '@roma_best_football_bets';
-const mainTestChannel = '@betbomb_test_channel';
-const testChannelId = -1001259208814;
+const token = '646825289:AAFnQq33lzBveqI8uS1dHjtXRdq1Dp7VI8M';
+const bot = new TelegramBot(token, {polling: true});
+const bot4TestChannel = '@betbomb_bot4';
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
@@ -152,37 +145,26 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-            let dangerAttacksDiff = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
+            let dangerAttacksDif = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let goalsOnTargetDiff = Math.abs(parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]));
             let goalsOffTarget = parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
-            let allGoals = goalsOnTarget + parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
             let dangerAttacksKef;
-            if (parseInt(view.stats.dangerous_attacks[0]) >= parseInt(view.stats.dangerous_attacks[1])) {
-              dangerAttacksKef = parseInt(view.stats.attacks[0])/parseInt(view.stats.dangerous_attacks[0])
-            } else {
-              dangerAttacksKef = parseInt(view.stats.attacks[1])/parseInt(view.stats.dangerous_attacks[1])
-            }
 
-            let favoriteDangerAttacksKef;
             if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
-              favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
             } else {
-              favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
+              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
-            if ((goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5) && goalsOffTarget >= 2
-              && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
-              && favoriteDangerAttacksKef >= 2.9) {
+            if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 2) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
-                  //let firstHalfOdds = JSON.parse(response3).results['1_6'];
-                  let startTotalOdd = jsonOdds[jsonOdds.length - 1];
-                  let currentTotalOdd = jsonOdds[0];
+                  let odd = jsonOdds[jsonOdds.length - 1];
                   let resultOdd;
                   let currentResultOdd;
 
@@ -191,17 +173,17 @@ function start() {
                     currentResultOdd = resultOdds[0];
                   }
 
-                  let handicapArray = startTotalOdd.handicap.split(',');
+                  let handicapArray = odd.handicap.split(',');
 
                   let score = _.find(totalScores, function(scoreItem) {
                     return scoreItem.itemId === item.id
                   });
 
-                  //let goalsFilter = parseFloat(handicapArray[handicapArray.length - 1])/score.scores;
+                  let startTotalOdd = parseFloat(odd.over_od);
 
-                  if (parseFloat(startTotalOdd.over_od) <= 1.45 && parseFloat(handicapArray[0]) <= 2.5
-                    || parseFloat(startTotalOdd.over_od) < 1.75 && parseInt(handicapArray[0]) === 3
-                    || parseFloat(startTotalOdd.over_od) < 2 && parseFloat(handicapArray[0]) > 3) {
+                  if (parseFloat(startTotalOdd.over_od) < 2 && parseFloat(handicapArray[0]) <= 2.5
+                    || parseFloat(startTotalOdd.over_od) <= 2 && parseInt(handicapArray[0]) === 3
+                    || parseFloat(startTotalOdd.over_od) <= 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -212,10 +194,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
-                    //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
-
-                    let message = 'Бот 2.3\n';
+                    let message = 'Бот 4\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
@@ -250,7 +229,6 @@ function start() {
                       message += "<b>Тотал матча " + score.scores + '.5 Б</b>';
                     }
 
-
                     const ik = new InlineKeyboard();
 
                     ik.addRow(
@@ -260,28 +238,11 @@ function start() {
 
                     let ikExport = ik.export();
 
-
-                    let messageCommon = 'Бот 2.3\n';
-
-                    messageCommon += item.league.name + "\n";
-                    messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-
-                    messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
-
-                    const ik2 = new InlineKeyboard();
-
-                    ik2.addRow(
-                      { text: "\u26BD Счет", callback_data: item.id },
-                    );
-
-                    let ikExport2 = ik2.export();
-
                     let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
-                    let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
+
 
                     showedEvents.push(item.id);
-                    bot.sendMessage(mainTestChannel, message, options);
-                    bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                    bot.sendMessage(bot4TestChannel, message, options);
                   }
 
                 })
@@ -289,8 +250,6 @@ function start() {
                   console.log('request odds failed' + err)
                 });
             }
-
-
           })
           .catch(function (err) {
             console.log('request view failed' + err)
