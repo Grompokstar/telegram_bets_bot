@@ -244,7 +244,7 @@ function start() {
                     }
 
                     message += "\n\n";
-                    message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
+                    //message += '(' + currentTotalOdd.over_od + '/' + currentTotalOdd.handicap + ')'
                     message += "<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
 
                     const ik = new InlineKeyboard();
