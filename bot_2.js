@@ -157,12 +157,12 @@ function start() {
             let goalsOnTargetDiff = Math.abs(parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]));
             let goalsOffTarget = parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
             let allGoals = goalsOnTarget + parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
-            let dangerAttacksKef;
+           /* let dangerAttacksKef;
             if (parseInt(view.stats.dangerous_attacks[0]) >= parseInt(view.stats.dangerous_attacks[1])) {
               dangerAttacksKef = parseInt(view.stats.attacks[0])/parseInt(view.stats.dangerous_attacks[0])
             } else {
               dangerAttacksKef = parseInt(view.stats.attacks[1])/parseInt(view.stats.dangerous_attacks[1])
-            }
+            }*/
 
             let favoriteDangerAttacksKef;
             if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
@@ -191,7 +191,7 @@ function start() {
                     currentResultOdd = resultOdds[0];
                   }
 
-                  let handicapArray = startTotalOdd.handicap.split(',');
+                  let handicapArray = odd.handicap.split(',');
                   let startTotalOdd = parseFloat(odd.over_od);
 
                   let score = _.find(totalScores, function(scoreItem) {
