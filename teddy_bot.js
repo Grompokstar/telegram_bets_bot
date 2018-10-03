@@ -151,7 +151,9 @@ function start() {
 
                   //let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-                  if (odd && (parseFloat(handicapArray[0]) <= 2.5 && odd.over_od <= 1.6 || parseFloat(startTotalOdd.over_od) < 1.8 && parseInt(handicapArray[0]) === 3 || odd.over_od < 1.9 && parseFloat(handicapArray[0]) > 3 )
+                  if (odd && (parseFloat(handicapArray[0]) <= 2.5 && odd.over_od <= 1.6
+                    || parseFloat(startTotalOdd.over_od) < 1.8 && parseInt(handicapArray[0]) === 3
+                    || odd.over_od < 1.9 && parseFloat(handicapArray[0]) > 3 )
                     && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 1.2 && parseFloat(currentResultOdd.away_od) <= 6)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
