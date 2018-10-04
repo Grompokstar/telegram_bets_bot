@@ -159,7 +159,8 @@ function start() {
               goalsOffTargetDiff = parseInt(view.stats.off_target[1]) - parseInt(view.stats.off_target[0])
             }
 
-            if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 2 && goalsOffTargetDiff >= 1) {
+            if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1)
+              && goalsOffTarget >= 2 && goalsOffTargetDiff >= 1) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
