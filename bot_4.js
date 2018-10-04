@@ -151,13 +151,15 @@ function start() {
             let goalsOffTarget = parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
             let dangerAttacksKef;
 
-            if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
-              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
+            let goalsOffTargetDiff = 0;
+
+            if (parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]) >= 0) {
+              goalsOffTargetDiff = parseInt(view.stats.off_target[0]) - parseInt(view.stats.off_target[1])
             } else {
-              dangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
+              goalsOffTargetDiff = parseInt(view.stats.off_target[1]) - parseInt(view.stats.off_target[0])
             }
 
-            if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 2) {
+            if (dangerAttacksDif >= 11 && (goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5 && goalsOnTargetDiff >= 1) && goalsOffTarget >= 2 && goalsOffTargetDiff >= 1) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
@@ -182,9 +184,16 @@ function start() {
 
                   let startTotalOdd = parseFloat(odd.over_od);
 
-                  if (startTotalOdd < 2 && parseFloat(handicapArray[0]) <= 2.5
-                    || startTotalOdd <= 2 && parseInt(handicapArray[0]) === 3
-                    || startTotalOdd <= 2 && parseFloat(handicapArray[0]) > 3) {
+                  if (startTotalOdd <= 2 && parseFloat(handicapArray[0]) <= 2.5
+                    || startTotalOdd < 2 && parseInt(handicapArray[0]) === 3
+                    || startTotalOdd < 2 && parseFloat(handicapArray[0]) > 3) {
+
+                    let isDangerTB = false;
+
+                    if (startTotalOdd > 1.45 && parseFloat(handicapArray[0]) <= 2.5
+                      || startTotalOdd >= 1.85 && parseInt(handicapArray[0]) === 3) {
+                      isDangerTB = true;
+                    }
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -203,6 +212,9 @@ function start() {
                       message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
                     }
                     message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
+                    if (isDangerTB) {
+                      message += '\u2757'
+                    }
 
 
                     if (view.stats) {
