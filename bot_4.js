@@ -120,7 +120,7 @@ function start() {
       filteredResults = _.filter(results, function(item) {
         totalScores.push({itemId: item.id, scores: parseInt(item.scores[2].home) + parseInt(item.scores[2].away)});
 
-        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
+        let leagueNameFilter = ['50', '60', '70', '80'];
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
