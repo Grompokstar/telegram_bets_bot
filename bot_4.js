@@ -83,7 +83,7 @@ bot.on("callback_query", function(query) {
           editText += (' \u26BD' + time + '\' ')
         })
 
-        if (editText.length > 200) {
+        if (editText.length > 250) {
           let homeName = viewReq.home.name ? viewReq.home.name.split(' ').join('-') : '';
           let awayName = viewReq.away.name ? viewReq.away.name.split(' ').join('-') : '';
           const ik = new InlineKeyboard();
