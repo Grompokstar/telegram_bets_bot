@@ -18,7 +18,23 @@ setInterval(function() {
 
 bot.on("callback_query", function(query) {
   console.log('callback_query');
-  //console.log(query);
+
+  function GoalTimes(events) {
+    let goalEvents = [];
+    let goalTimes = [];
+
+    _.forEach(events, function(event) {
+      if (event.text.indexOf(' Goal ') >=0 ) {
+        goalEvents.push(event.text)
+      };
+    });
+
+    _.forEach(goalEvents, function(event) {
+      goalTimes.push(event.substring(0, event.indexOf('\'')));
+    })
+
+    return goalTimes;
+  }
 
   rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
     .then(function(viewRequest) {
@@ -31,10 +47,14 @@ bot.on("callback_query", function(query) {
       }
 
       let finishStr = '';
+      let goalTimes = GoalTimes(viewReq.events);
 
       if (viewReq.time_status === '1' ) {
 
-        finishStr = " \u23F0" + viewReq.timer.tm + "\'";
+        finishStr = " \u23F0" + viewReq.timer.tm + "\'\n";
+        _.forEach(goalTimes, function(time) {
+          finishStr += (' \u26BD' + time + '\' ')
+        })
         bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
 
       } else if (viewReq.time_status === '3') {
@@ -51,7 +71,10 @@ bot.on("callback_query", function(query) {
           }
         }
 
-        editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>';
+        editText += '\n\n<b>Итоговый счет: ' + scoresText + ' \u{1F3C1}</b>\n';
+        _.forEach(goalTimes, function(time) {
+          editText += (' \u26BD' + time + '\' ')
+        })
 
         let homeName = viewReq.home.name ? viewReq.home.name.split(' ').join('-') : '';
         let awayName = viewReq.away.name ? viewReq.away.name.split(' ').join('-') : '';
@@ -82,12 +105,11 @@ function start() {
 
       filteredResults = _.filter(results, function(item) {
         //let isDraw = parseInt(item.scores['2'].home) === parseInt(item.scores['2'].away);
-        let totalGoals = parseInt(item.scores['2'].home) + parseInt(item.scores['2'].away);
+        let totalGoals = parseInt(item.scores['2'].home) - parseInt(item.scores['2'].away);
 
-        let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals <= 0
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals <= 1
         } else {
           return false
         }
@@ -103,10 +125,11 @@ function start() {
             let view = JSON.parse(response2).results[0];
             let dangerAttacksKef;
             let advantageTeam = '';
-            let dangerAttacksDiff = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
+            let dangerAttacksDiff = parseInt(view.stats.dangerous_attacks[1]) - parseInt(view.stats.dangerous_attacks[0]);
             let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
             let attacksSumm = parseInt(view.stats.attacks[0]) + parseInt(view.stats.attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
+            let goalsOnTargetDiff = parseInt(view.stats.on_target[1]) - parseInt(view.stats.on_target[0]);
 
             if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
               dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
@@ -119,14 +142,13 @@ function start() {
             let attacksRatioKefAway = parseInt(view.stats.attacks[1])/parseInt(view.stats.attacks[0]);
 
 
-            if (advantageTeam === 'away' && dangerAttacksSumm >= 18 && dangerAttacksDiff >= 2 && attacksSumm >= 30
-               && goalsOnTarget >= 2 && attacksRatioKefAway >= 1.2) {
+            if (advantageTeam === 'away' && dangerAttacksSumm >= 18 && dangerAttacksDiff >= 1 && attacksSumm >= 32
+               && goalsOnTarget >= 2 && attacksRatioKefAway >= 1 && goalsOnTargetDiff >= 0) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];
                   let resultOdds = JSON.parse(response3).results['1_1'];
-                  let firstHalfOdds = JSON.parse(response3).results['1_6'];
                   let odd;
                   let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
@@ -140,21 +162,16 @@ function start() {
                   if (resultOdds) {
                     resultOdd = resultOdds[resultOdds.length - 1];
                     currentResultOdd = resultOdds[0];
-                    oddsKef = parseFloat(resultOdd.home_od)/parseFloat(resultOdd.away_od);
-                  }
-
-                  if (firstHalfOdds) {
-                    firstHalfOdd = firstHalfOdds[0];
                   }
 
                   let handicapArray = odd.handicap.split(',');
 
                   //let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
-                  if (odd && (parseFloat(handicapArray[0]) <= 2.5 && odd.over_od <= 1.6
-                    || parseFloat(startTotalOdd.over_od) < 1.8 && parseInt(handicapArray[0]) === 3
-                    || odd.over_od < 1.9 && parseFloat(handicapArray[0]) > 3 )
-                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 1.2 && parseFloat(currentResultOdd.away_od) <= 6)) {
+                  if (odd && (parseFloat(odd.over_od <= 1.45 && handicapArray[0]) <= 2.5
+                    || parseFloat(odd.over_od) < 1.85 && parseInt(handicapArray[0]) === 3
+                    || parseFloat(odd.over_od) < 1.95 && parseFloat(handicapArray[0]) > 3 )
+                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 1.7 && parseFloat(currentResultOdd.away_od) <= 7)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -168,7 +185,7 @@ function start() {
                     //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
                     //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
 
-                    let message = 'Бот Тедди V-1.3\n';
+                    let message = 'Бот Тедди V-1.4\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
