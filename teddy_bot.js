@@ -144,29 +144,25 @@ function start() {
 
             if (advantageTeam === 'away' && dangerAttacksSumm >= 18 && dangerAttacksDiff >= 1 && attacksSumm >= 32
                && goalsOnTarget >= 2 && attacksRatioKefAway >= 1 && goalsOnTargetDiff >= 0) {
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&odds_market=1,3,6')
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
-                  let jsonOdds = JSON.parse(response3).results['1_3'];
-                  let resultOdds = JSON.parse(response3).results['1_1'];
+                  let jsonOddsObj = JSON.parse(response3).results['1_3'];
+                  let resultOddsObj = JSON.parse(response3).results['1_1'];
                   let odd;
-                  let currentTotalOdd = jsonOdds[0];
                   let resultOdd;
                   let currentResultOdd;
-                  let firstHalfOdd;
-                  let oddsKef;
-                  if (jsonOdds) {
-                    odd = jsonOdds[jsonOdds.length - 1];
+
+                  if (jsonOddsObj) {
+                    odd = jsonOddsObj[jsonOddsObj.length - 1];
                   }
 
-                  if (resultOdds) {
-                    resultOdd = resultOdds[resultOdds.length - 1];
-                    currentResultOdd = resultOdds[0];
+                  if (resultOddsObj) {
+                    resultOdd = resultOddsObj[resultOddsObj.length - 1];
+                    currentResultOdd = resultOddsObj[0];
                   }
 
                   let handicapArray = odd.handicap.split(',');
-
-                  //let dangerAttacksKef2 = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
 
                   if (odd && (parseFloat(odd.over_od <= 1.45 && handicapArray[0]) <= 2.5
                     || parseFloat(odd.over_od) < 1.85 && parseInt(handicapArray[0]) === 3
@@ -182,14 +178,11 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    //var averageGoalsFilterMain = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2;
-                    //var averageGoalsFilter = (parseFloat(averageHomeGoals) + parseFloat(averageAwayGoals))/2 - parseInt(score.scores);
-
                     let message = 'Бот Тедди V-1.4\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
-                    if (resultOdds) {
+                    if (resultOddsObj) {
                       message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
                     }
                     message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
