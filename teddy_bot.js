@@ -130,6 +130,7 @@ function start() {
             let attacksSumm = parseInt(view.stats.attacks[0]) + parseInt(view.stats.attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
             let goalsOnTargetDiff = parseInt(view.stats.on_target[1]) - parseInt(view.stats.on_target[0]);
+            let goalsOffTargetDiff = parseInt(view.stats.off_target[1]) - parseInt(view.stats.off_target[0]);
 
             if (parseInt(view.stats.dangerous_attacks[0]) > parseInt(view.stats.dangerous_attacks[1])) {
               dangerAttacksKef = parseInt(view.stats.dangerous_attacks[0])/parseInt(view.stats.dangerous_attacks[1]);
@@ -142,8 +143,8 @@ function start() {
             let attacksRatioKefAway = parseInt(view.stats.attacks[1])/parseInt(view.stats.attacks[0]);
 
 
-            if (advantageTeam === 'away' && dangerAttacksSumm >= 18 && dangerAttacksDiff >= 1 && attacksSumm >= 32
-               && goalsOnTarget >= 2 && attacksRatioKefAway >= 1 && goalsOnTargetDiff >= 0) {
+            if (advantageTeam === 'away' && dangerAttacksSumm >= 18 && dangerAttacksDiff >= 2 && attacksSumm >= 33
+               && goalsOnTarget >= 2 && attacksRatioKefAway >= 1 && goalsOnTargetDiff >= 0 && goalsOffTargetDiff >= 0) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -178,7 +179,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот Тедди V-1.4\n';
+                    let message = 'Бот Тедди V-1.5\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
