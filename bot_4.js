@@ -123,7 +123,7 @@ function start() {
         let leagueNameFilter = ['50', '60', '70', '80'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
+          return item.timer.tm >= 18 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
             && item.league.name.indexOf(leagueNameFilter[0]) === -1
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
@@ -185,8 +185,8 @@ function start() {
 
                   let startTotalOdd = parseFloat(odd.over_od);
 
-                  if (startTotalOdd <= 2 && parseFloat(handicapArray[0]) <= 2.5
-                    || startTotalOdd < 2 && parseInt(handicapArray[0]) === 3
+                  if (startTotalOdd < 1.9 && parseFloat(handicapArray[0]) === 2.5
+                    || startTotalOdd < 1.9 && parseInt(handicapArray[0]) === 3
                     || startTotalOdd < 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let isDangerTB = false;
