@@ -185,9 +185,9 @@ function start() {
 
                   let startTotalOdd = parseFloat(odd.over_od);
 
-                  if (startTotalOdd < 1.9 && parseFloat(handicapArray[0]) === 2.5
-                    || startTotalOdd < 1.9 && parseInt(handicapArray[0]) === 3
-                    || startTotalOdd < 2 && parseFloat(handicapArray[0]) > 3) {
+                  if (startTotalOdd < 1.9 && parseFloat(handicapArray[0]) <= 2.5
+                    || startTotalOdd <= 1.9 && parseInt(handicapArray[0]) === 3
+                    || startTotalOdd <= 2 && parseFloat(handicapArray[0]) > 3) {
 
                     let isDangerTB = false;
 
