@@ -260,9 +260,9 @@ function start() {
 
 
                     showedEvents.push(item.id);
-                    bot.sendMessage(bot3TestChannel, message, options);
+                    //bot.sendMessage(bot3TestChannel, message, options);
                     bot.sendMessage(mainTestChannel, message, options);
-                    bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
+                    //bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
                   }
 
                 })
