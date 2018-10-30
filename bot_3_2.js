@@ -151,11 +151,12 @@ function start() {
             let attacksSumm = parseInt(view.stats.attacks[0]) + parseInt(view.stats.attacks[1]);
             let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTarget = parseInt(view.stats.on_target[0]) + parseInt(view.stats.on_target[1]);
+            let goalsOnTargetDiff = Math.abs(parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]));
             let goalsOffTarget = parseInt(view.stats.off_target[0]) + parseInt(view.stats.off_target[1]);
             let allGoals = 0;
             allGoals = goalsOnTarget + goalsOffTarget;
 
-            if (goalsOnTarget >= 3 && goalsOffTarget >= 1 && allGoals >= 5 && attacksSumm >= 32 && dangerAttacksSumm/attacksSumm >= 0.48 && dangerAttacksSumm/attacksSumm <= 0.68) {
+            if ((goalsOnTargetDiff >= 3 || goalsOnTarget >= 4) && goalsOffTarget >= 1 && allGoals >= 5 && attacksSumm >= 32 && dangerAttacksSumm/attacksSumm >= 0.4 && dangerAttacksSumm/attacksSumm <= 0.75) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
