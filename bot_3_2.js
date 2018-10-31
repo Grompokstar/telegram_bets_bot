@@ -126,7 +126,7 @@ function start() {
         let leagueNameFilter = ['50', '60', '70', '80', 'U18', 'U19', 'U20', 'U21'];
 
         if (item.timer) {
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
+          return item.timer.tm >= 18 && item.timer.tm <= 24 && showedEvents.indexOf(item.id) === -1
             && item.league.name.indexOf(leagueNameFilter[0]) === -1
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
