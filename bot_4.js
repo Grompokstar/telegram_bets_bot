@@ -6,6 +6,7 @@ const _ = require('lodash');
 const token = '646825289:AAFnQq33lzBveqI8uS1dHjtXRdq1Dp7VI8M';
 const bot = new TelegramBot(token, {polling: true});
 const bot4TestChannel = '@betbomb_bot4';
+const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
@@ -248,11 +249,27 @@ function start() {
 
                     let ikExport = ik.export();
 
-                    let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                    let messageCommon = 'Бот Катюша\n';
 
+                    messageCommon += item.league.name + "\n";
+                    messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
+
+                    messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
+
+                    const ik2 = new InlineKeyboard();
+
+                    ik2.addRow(
+                      { text: "\u26BD Счет", callback_data: item.id },
+                    );
+
+                    let ikExport2 = ik2.export();
+
+                    let options = Object.assign({}, {parse_mode: 'HTML'}, ikExport);
+                    let optionsCommon = Object.assign({}, {parse_mode: 'HTML'}, ikExport2);
 
                     showedEvents.push(item.id);
                     bot.sendMessage(bot4TestChannel, message, options);
+                    bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
                   }
 
                 })
