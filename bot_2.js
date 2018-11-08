@@ -7,11 +7,9 @@ const mainToken = '515855036:AAEY-jgjNUA8ZKu7DyiLhXqY71PVKj4nxK4';
 const testToken = '571233425:AAEuaeoImFHtepoZxIjKxV9DP-T4M-zAgu0';
 const bot_2_token = '565256556:AAHNRNjaVgPgCLy-UDLtkCUD5iu-1bcBkV4';
 const bot = new TelegramBot(bot_2_token, {polling: true});
-const testChannelName = '@test_telegram_bots';
-const zaryadPlusChannel = '@betbomb_zaryad_plus';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
-const mainChannelName = '@roma_best_football_bets';
 const mainTestChannel = '@betbomb_test_channel';
+const bot2Channel = '@betbomb_bot3_test'
 const testChannelId = -1001259208814;
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
@@ -277,6 +275,7 @@ function start() {
 
                     showedEvents.push(item.id);
                     bot.sendMessage(mainTestChannel, message, options);
+                    bot.sendMessage(bot2Channel, message, options);
                     bot.sendMessage(zaryadPlusCommonChannel, messageCommon, optionsCommon);
                   }
 
