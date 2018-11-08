@@ -8,10 +8,20 @@ const bot = new TelegramBot(bot_3_Token, {polling: true});
 const bot3TestChannel = '@betbomb_bot3_test';
 const mainTestChannel = '@betbomb_test_channel';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
+const translate = require('./translate');
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
 let showedEvents = [];
+
+function _t(text) {
+  if (translate.ru[text]) {
+    return (translate.ru[text].icon ? translate.ru[text].icon : '') + " " + translate.ru[text].text
+  } else {
+    return '\u26BD ' + text
+  }
+
+}
 
 
 setInterval(function() {
@@ -203,7 +213,7 @@ function start() {
 
                     let message = 'Бот 3.3\n';
 
-                    message += '\u26BD ' + item.league.name + "\n";
+                    message += _t(item.league.name) + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                     if (resultOdds) {
                       message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
@@ -243,7 +253,7 @@ function start() {
 
                     let messageCommon = 'Бот 3.3\n';
 
-                    messageCommon += item.league.name + "\n";
+                    messageCommon += _t(item.league.name) + "\n";
                     messageCommon += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
 
                     messageCommon += "\n\n<b>Тотал 1-го тайма " + score.scores + '.5 Б</b>';
