@@ -111,7 +111,7 @@ bot.on("callback_query", function(query) {
 function start() {
   let filteredResults = [];
 
-  rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-BCLtMmtKT698vk&LNG_ID=73')
+  rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-BCLtMmtKT698vk')
     .then(function (response) {
       console.log('запрос events');
       let totalScores = [];
@@ -141,7 +141,7 @@ function start() {
 
       _.forEach(filteredResults, function(item) {
 
-        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + item.id + '&LNG_ID=73')
+        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
           .then(function (response2) {
             console.log('запрос view');
 
