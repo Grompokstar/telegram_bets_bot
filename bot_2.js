@@ -9,7 +9,7 @@ const bot_2_token = '565256556:AAHNRNjaVgPgCLy-UDLtkCUD5iu-1bcBkV4';
 const bot = new TelegramBot(bot_2_token, {polling: true});
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 const mainTestChannel = '@betbomb_test_channel';
-const bot2Channel = '@betbomb_bot3_test'
+const bot2Channel = '@betbomb_bot3_test';
 const testChannelId = -1001259208814;
 const translate = require('./translate');
 
@@ -180,8 +180,7 @@ function start() {
             }
 
             if ((goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5) && goalsOffTarget >= 2
-              && (view.stats.dangerous_attacks[0] <= 10 || view.stats.dangerous_attacks[1] <= 10)
-              && favoriteDangerAttacksKef >= 2.9) {
+              && favoriteDangerAttacksKef >= 2.8) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
