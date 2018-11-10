@@ -143,10 +143,6 @@ function start() {
             && item.league.name.indexOf(leagueNameFilter[1]) === -1
             && item.league.name.indexOf(leagueNameFilter[2]) === -1
             && item.league.name.indexOf(leagueNameFilter[3]) === -1
-            && item.league.name.indexOf(leagueNameFilter[4]) === -1
-            && item.league.name.indexOf(leagueNameFilter[5]) === -1
-            && item.league.name.indexOf(leagueNameFilter[6]) === -1
-            && item.league.name.indexOf(leagueNameFilter[7]) === -1
         } else {
           return false
         }
