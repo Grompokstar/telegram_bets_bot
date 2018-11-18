@@ -159,6 +159,10 @@ function start() {
             let allGoals = goalsOnTarget + goalsOffTarget;
             let dangerAttacksKef;
 
+            let homeAllGoals = parseInt(view.stats.on_target[0]) + parseInt(view.stats.off_target[0]);
+            let awayAllGoals = parseInt(view.stats.on_target[1]) + parseInt(view.stats.off_target[1]);
+            let dangerAttacksSumm = parseInt(view.stats.dangerous_attacks[0]) + parseInt(view.stats.dangerous_attacks[1]);
+
             let goalsOffTargetDiff = 0;
 
             if (parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]) >= 0) {
@@ -174,7 +178,8 @@ function start() {
               favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
-            if (goalsOnTarget > 1 && allGoals > 3 && favoriteDangerAttacksKef > 1.67) {
+            if (goalsOnTarget > 1 && allGoals > 3 && (homeAllGoals >= 3 || awayAllGoals >= 3)
+              && favoriteDangerAttacksKef > 1.67 && dangerAttacksSumm >= 14) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
