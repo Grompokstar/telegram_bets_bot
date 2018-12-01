@@ -178,7 +178,7 @@ function start() {
               favoriteDangerAttacksKef = parseInt(view.stats.dangerous_attacks[1])/parseInt(view.stats.dangerous_attacks[0]);
             }
 
-            if (goalsOnTarget > 1 && allGoals > 3 && (homeAllGoals >= 3 || awayAllGoals >= 3)
+            if (goalsOnTargetDiff >= 2 && goalsOnTarget > 1 && allGoals > 3 && (homeAllGoals >= 4 || awayAllGoals >= 4)
               && favoriteDangerAttacksKef > 1.67 && dangerAttacksSumm >= 14) {
 
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
