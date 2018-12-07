@@ -5,7 +5,7 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const token = '648090532:AAE9Wh7ZCFJjEuix5zzFPvPwtPB88Ma3Gsc';
 const bot = new TelegramBot(token, {polling: true});
-const channel = '@betbomb_teddy';
+const channel = '@betbomb_oracle';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
