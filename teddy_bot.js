@@ -1,10 +1,22 @@
 process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require('node-telegram-bot-api');
+const Agent = require('socks5-https-client/lib/Agent');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
 const token = '692281417:AAG76PYhrwrvwkpcd3zTlgrkixjDH9GFCKY';
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, {
+  polling: true,
+  request: {
+    agentClass: Agent,
+    agentOptions: {
+      socksHost: '45.32.154.68',
+      socksPort: 40801,
+      socksUsername: 'romachervontsev',
+      socksPassword: '39dk39dk3'
+    }
+  }
+});
 const channel = '@betbomb_teddy';
 
 

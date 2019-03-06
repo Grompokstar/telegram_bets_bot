@@ -1,10 +1,22 @@
 process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require('node-telegram-bot-api');
+const Agent = require('socks5-https-client/lib/Agent');
 const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard-wrapper');
 const rp = require('request-promise');
 const _ = require('lodash');
 const token = '656200648:AAHDYBeyUZkHg3HOCbuVnDcxZVbpgZd9cPg';
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, {
+  polling: true,
+  request: {
+    agentClass: Agent,
+    agentOptions: {
+      socksHost: '45.32.154.68',
+      socksPort: 40801,
+      socksUsername: 'romachervontsev',
+      socksPassword: '39dk39dk3'
+    }
+  }
+});
 const testChannelId = -1001259208814;
 const mainTestChannel = '@betbomb_test_channel';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';

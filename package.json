@@ -19,6 +19,7 @@
     "node-telegram-bot-api": "^0.30.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
+    "socks5-https-client": "^1.2.1",
     "telegram-keyboard-wrapper": "^1.0.1"
   }
 }
