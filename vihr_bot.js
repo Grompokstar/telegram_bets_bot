@@ -5,7 +5,8 @@ const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard
 const rp = require('request-promise');
 const _ = require('lodash');
 const token = '798440883:AAGqqK9tVwglDehcsue8VX7UT0pHHqPwQmE';
-const bot = new TelegramBot(token, {
+const bot = new TelegramBot(token, {polling: true});
+/*const bot = new TelegramBot(token, {
   polling: true,
   request: {
     agentClass: Agent,
@@ -16,7 +17,7 @@ const bot = new TelegramBot(token, {
       socksPassword: '39dk39dk3'
     }
   }
-});
+});*/
 const vihrChannel = '@betbomb_bot_vihr';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
 const translate = require('./translate');

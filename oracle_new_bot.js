@@ -5,7 +5,8 @@ const { InlineKeyboard, ReplyKeyboard, ForceReply } = require('telegram-keyboard
 const rp = require('request-promise');
 const _ = require('lodash');
 const token = '648090532:AAE9Wh7ZCFJjEuix5zzFPvPwtPB88Ma3Gsc';
-const bot = new TelegramBot(token, {
+const bot = new TelegramBot(token, {polling: true});
+/*const bot = new TelegramBot(token, {
   polling: true,
   request: {
     agentClass: Agent,
@@ -16,7 +17,7 @@ const bot = new TelegramBot(token, {
       socksPassword: '39dk39dk3'
     }
   }
-});
+});*/
 const channel = '@betbomb_oracle';
 
 
