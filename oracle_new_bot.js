@@ -168,7 +168,7 @@ function start() {
                   if (odd && (parseFloat(odd.over_od <= 1.65 && handicapArray[0]) <= 2.5
                     || parseFloat(odd.over_od) <= 1.85 && parseInt(handicapArray[0]) === 3
                     || parseFloat(odd.over_od) <= 2 && parseFloat(handicapArray[0]) > 3 )
-                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 4 && parseFloat(currentResultOdd.away_od) <= 13)) {
+                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 4.25 && parseFloat(currentResultOdd.away_od) <= 13)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -179,12 +179,12 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот Оракул 2.1\n';
+                    let message = 'Бот Оракул 2.2\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
                     if (resultOddsObj) {
-                      message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.away_od;
+                      message += "\n<pre>" + resultOdd.home_od + '-' + resultOdd.draw_od + '-' + resultOdd.away_od + ' => ' + currentResultOdd.home_od + '-' + currentResultOdd.draw_od + '-' + currentResultOdd.away_od;
                     }
                     message += '\nТБ - ' + odd.over_od + '/' + odd.handicap;
 
