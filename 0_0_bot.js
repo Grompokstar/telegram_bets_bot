@@ -127,7 +127,15 @@ function start() {
           'Russia',
           'Serbia',
           'Uganda',
-          'World'];
+          'World',
+          'Thailand',
+          'China',
+          'Friendlies',
+          'Kazakhstan',
+          'Norway',
+          'Belgium'];
+
+        let notLeagueFilter = ['Cup']
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
@@ -145,7 +153,13 @@ function start() {
             || item.league.name.indexOf(leagueNameFilter[11]) === 0
             || item.league.name.indexOf(leagueNameFilter[12]) === 0
             || item.league.name.indexOf(leagueNameFilter[13]) === 0
-            || item.league.name.indexOf(leagueNameFilter[14]) === 0)
+            || item.league.name.indexOf(leagueNameFilter[14]) === 0
+            || item.league.name.indexOf(leagueNameFilter[15]) === 0
+            || item.league.name.indexOf(leagueNameFilter[16]) === 0
+            || item.league.name.indexOf(leagueNameFilter[17]) === 0
+            || item.league.name.indexOf(leagueNameFilter[18]) === 0
+            || item.league.name.indexOf(leagueNameFilter[19]) === 0)
+            && item.league.name.indexOf(notLeagueFilter[0]) === -1
         } else {
           return false
         }
@@ -193,7 +207,7 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  if (sumAllStartOdd >= 8 && sumAllStartOdd < 8.7 && sumAllCurrentOdd >= 8 && sumAllCurrentOdd <= 8.6) {
+                  if (sumAllStartOdd < 8.7 && sumAllCurrentOdd <= 8.6) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
