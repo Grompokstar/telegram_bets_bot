@@ -190,7 +190,7 @@ function start() {
                     }
 
                     message += "\n\n";
-                    message += "<b>Ничья</b>";
+                    message += "<b>Победа 1</b>";
 
 
                     const ik = new InlineKeyboard();
