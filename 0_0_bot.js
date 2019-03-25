@@ -139,27 +139,6 @@ function start() {
 
         if (item.timer) {
           return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
-            && (item.league.name.indexOf(leagueNameFilter[0]) === 0
-            || item.league.name.indexOf(leagueNameFilter[1]) === 0
-            || item.league.name.indexOf(leagueNameFilter[2]) === 0
-            || item.league.name.indexOf(leagueNameFilter[3]) === 0
-            || item.league.name.indexOf(leagueNameFilter[4]) === 0
-            || item.league.name.indexOf(leagueNameFilter[5]) === 0
-            || item.league.name.indexOf(leagueNameFilter[6]) === 0
-            || item.league.name.indexOf(leagueNameFilter[7]) === 0
-            || item.league.name.indexOf(leagueNameFilter[8]) === 0
-            || item.league.name.indexOf(leagueNameFilter[9]) === 0
-            || item.league.name.indexOf(leagueNameFilter[10]) === 0
-            || item.league.name.indexOf(leagueNameFilter[11]) === 0
-            || item.league.name.indexOf(leagueNameFilter[12]) === 0
-            || item.league.name.indexOf(leagueNameFilter[13]) === 0
-            || item.league.name.indexOf(leagueNameFilter[14]) === 0
-            || item.league.name.indexOf(leagueNameFilter[15]) === 0
-            || item.league.name.indexOf(leagueNameFilter[16]) === 0
-            || item.league.name.indexOf(leagueNameFilter[17]) === 0
-            || item.league.name.indexOf(leagueNameFilter[18]) === 0
-            || item.league.name.indexOf(leagueNameFilter[19]) === 0)
-            && item.league.name.indexOf(notLeagueFilter[0]) === -1
         } else {
           return false
         }
@@ -183,7 +162,7 @@ function start() {
             let allGoals = goalsOnTarget + goalsOffTarget;
 
 
-            if (goalsOnTarget <= 1 && dangerAttacksDiff >= 3) {
+            if (allGoals <= 0) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -207,7 +186,7 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  if (sumAllStartOdd < 8.7 && sumAllCurrentOdd <= 8.6) {
+                  if (sumAllStartOdd < 8.7 && sumAllCurrentOdd <= 8.8) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
