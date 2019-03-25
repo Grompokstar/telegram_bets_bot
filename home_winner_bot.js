@@ -123,7 +123,7 @@ function start() {
             console.log('запрос view');
 
             let view = JSON.parse(response2).results[0];
-            let dangerAttacksDiff = Math.abs(parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]));
+            let dangerAttacksDiff = parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTargetDiff = parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]);
 
             if (dangerAttacksDiff >= 0 && goalsOnTargetDiff >= 0) {
