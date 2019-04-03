@@ -6,19 +6,8 @@ const rp = require('request-promise');
 const _ = require('lodash');
 const token = '779423714:AAHNGY3BOvZYRgBsbH56w30deVz4iyWDTGg';
 const bot = new TelegramBot(token, {polling: true});
-/*const bot = new TelegramBot(token, {
-  polling: true,
-  request: {
-    agentClass: Agent,
-    agentOptions: {
-      socksHost: '45.32.154.68',
-      socksPort: 40801,
-      socksUsername: 'romachervontsev',
-      socksPassword: '39dk39dk3'
-    }
-  }
-});*/
-const channel = '@betbomb_draw';
+
+const channel = '-1001213923941';
 
 
 const unicodeScores = ['\u0030\u20E3', '\u0031\u20E3', '\u0032\u20E3', '\u0033\u20E3', '\u0034\u20E3', '\u0035\u20E3', '\u0036\u20E3', '\u0037\u20E3'];
