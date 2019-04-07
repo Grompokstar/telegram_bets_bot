@@ -167,7 +167,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот Дружба 1.1\n';
+                    let message = 'Бот Дружба V1.1\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
