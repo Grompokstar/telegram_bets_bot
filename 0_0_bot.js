@@ -168,12 +168,12 @@ function start() {
                   console.log('запрос odds');
                   let jsonOddsObj = JSON.parse(response3).results['1_3'];
                   let resultOddsObj = JSON.parse(response3).results['1_1'];
-                  let odd;
+                  let startTotalOdd;
                   let resultOdd;
                   let currentResultOdd;
 
                   if (jsonOddsObj) {
-                    odd = jsonOddsObj[jsonOddsObj.length - 1];
+                    startTotalOdd = jsonOddsObj[jsonOddsObj.length - 1];
                   }
 
                   if (resultOddsObj) {
@@ -184,9 +184,10 @@ function start() {
                   let sumAllStartOdd = parseFloat(resultOdd.home_od) + parseFloat(resultOdd.draw_od) + parseFloat(resultOdd.away_od)
                   let sumAllCurrentOdd = parseFloat(currentResultOdd.home_od) + parseFloat(currentResultOdd.draw_od) + parseFloat(currentResultOdd.away_od)
 
-                  let handicapArray = odd.handicap.split(',');
+                  let handicapArray = startTotalOdd.handicap.split(',');
 
-                  if (sumAllStartOdd < 8.7 && sumAllCurrentOdd <= 8.8) {
+                  if (sumAllStartOdd < 8.6 && sumAllCurrentOdd <= 8.9
+                     && parseFloat(startTotalOdd.over_od) >= 1.85 && parseFloat(handicapArray[0]) <= 2.5) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -197,7 +198,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот 0_0\n';
+                    let message = 'Бот 0_0 V1.1\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
