@@ -168,12 +168,12 @@ function start() {
                   console.log('запрос odds');
                   let jsonOddsObj = JSON.parse(response3).results['1_3'];
                   let resultOddsObj = JSON.parse(response3).results['1_1'];
-                  let startTotalOdd;
+                  let odd;
                   let resultOdd;
                   let currentResultOdd;
 
                   if (jsonOddsObj) {
-                    startTotalOdd = jsonOddsObj[jsonOddsObj.length - 1];
+                    odd = jsonOddsObj[jsonOddsObj.length - 1];
                   }
 
                   if (resultOddsObj) {
@@ -184,10 +184,10 @@ function start() {
                   let sumAllStartOdd = parseFloat(resultOdd.home_od) + parseFloat(resultOdd.draw_od) + parseFloat(resultOdd.away_od)
                   let sumAllCurrentOdd = parseFloat(currentResultOdd.home_od) + parseFloat(currentResultOdd.draw_od) + parseFloat(currentResultOdd.away_od)
 
-                  let handicapArray = startTotalOdd.handicap.split(',');
+                  let handicapArray = odd.handicap.split(',');
 
                   if (sumAllStartOdd < 8.6 && sumAllCurrentOdd <= 8.9
-                     && parseFloat(startTotalOdd.over_od) >= 1.85 && parseFloat(handicapArray[0]) <= 2.5) {
+                     && parseFloat(odd.over_od) >= 1.85 && parseFloat(handicapArray[0]) <= 2.5) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
