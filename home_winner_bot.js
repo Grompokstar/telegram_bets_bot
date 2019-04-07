@@ -126,7 +126,7 @@ function start() {
             let dangerAttacksDiff = parseInt(view.stats.dangerous_attacks[0]) - parseInt(view.stats.dangerous_attacks[1]);
             let goalsOnTargetDiff = parseInt(view.stats.on_target[0]) - parseInt(view.stats.on_target[1]);
 
-            if (dangerAttacksDiff >= 0 && goalsOnTargetDiff >= 0) {
+            if (dangerAttacksDiff >= 3 && goalsOnTargetDiff >= 0) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -151,7 +151,7 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  if (parseFloat(resultOdd.home_od) >= 3.5 && oddsKef >= 0.97) {
+                  if (parseFloat(resultOdd.home_od) >= 3.5 && oddsKef >= 0.94) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
