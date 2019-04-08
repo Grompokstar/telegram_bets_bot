@@ -70,7 +70,12 @@ bot.on("callback_query", function(query) {
         })
         bot.answerCallbackQuery(query.id, { text: scoresText + finishStr})
 
-      } else if (viewReq.time_status === '3') {
+      } else if (viewReq.time_status === '3'
+        || viewReq.time_status === '2'
+        || viewReq.time_status === '4'
+        || viewReq.time_status === '5'
+        || viewReq.time_status === '8'
+        || viewReq.time_status === '99') {
         let editText = query.message.text;
 
         if (parseInt(viewReq.scores["2"].home) === parseInt(viewReq.scores["2"].away)) {
