@@ -1,0 +1,3 @@
+DEPLOY_ADDRESS=cloudscalers@176.118.165.150
+DEPLOY_PATH=/home/cloudscalers/telegramBots
+DEPLOY_PORT=
