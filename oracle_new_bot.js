@@ -118,7 +118,7 @@ function start() {
         if (item.timer) {
           let leagueNameFilter = ['50', '60', '70', '80', 'England'];
 
-          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1 && totalGoals <= 2
+          return item.timer.tm === 20 && showedEvents.indexOf(item.id) === -1
           && item.league.name.indexOf(leagueNameFilter[0]) === -1
           && item.league.name.indexOf(leagueNameFilter[1]) === -1
           && item.league.name.indexOf(leagueNameFilter[2]) === -1
@@ -145,7 +145,7 @@ function start() {
             let allGoals = goalsOnTarget + goalsOffTarget;
 
 
-            if (dangerAttacksDiff >= 2 && dangerAttacksSumm >= 17 && attacksSumm >= 27 && allGoals >= 4) {
+            if (dangerAttacksDiff >= 2 && dangerAttacksSumm >= 15 && attacksSumm >= 27 && allGoals >= 4) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -169,7 +169,7 @@ function start() {
                   if (odd && (parseFloat(odd.over_od <= 1.65 && handicapArray[0]) <= 2.5
                     || parseFloat(odd.over_od) <= 1.875 && parseInt(handicapArray[0]) === 3
                     || parseFloat(odd.over_od) <= 2 && parseFloat(handicapArray[0]) > 3 )
-                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 4.25 && parseFloat(currentResultOdd.away_od) <= 13)) {
+                    && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 4.25 && parseFloat(currentResultOdd.away_od) <= 9)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -180,7 +180,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот Оракул 2.3\n';
+                    let message = 'Бот Оракул 3.0\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
