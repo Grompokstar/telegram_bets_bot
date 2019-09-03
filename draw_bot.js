@@ -140,7 +140,7 @@ function start() {
             let allGoals = goalsOnTarget + goalsOffTarget;
 
 
-            if (dangerAttacksDiff >= 4 && team2AllGoals >= 2) {
+            if (dangerAttacksDiff >= 2 && team2AllGoals >= 1) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -161,7 +161,7 @@ function start() {
 
                   let handicapArray = odd.handicap.split(',');
 
-                  if (odd && (parseFloat(odd.over_od) >= 1.85  && parseFloat(odd.over_od) < 2 && handicapArray[0] <= 2.5)
+                  if (odd && (parseFloat(odd.over_od) >= 1.9  && parseFloat(odd.over_od) < 2 && handicapArray[0] <= 2.5)
                     && currentResultOdd && (parseFloat(currentResultOdd.away_od) >= 4 && parseFloat(currentResultOdd.away_od) <= 13)) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
@@ -173,7 +173,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот Дружба V1.1\n';
+                    let message = 'Бот Дружба 2.0\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
