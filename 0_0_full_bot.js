@@ -129,7 +129,7 @@ function start() {
             let allGoals = goalsOnTarget + goalsOffTarget;
 
 
-            if (allGoals <= 1) {
+            if (allGoals <= 1 && dangerAttacksDiff <= 5) {
               rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
@@ -150,10 +150,12 @@ function start() {
 
                   let sumAllStartOdd = parseFloat(resultOdd.home_od) + parseFloat(resultOdd.draw_od) + parseFloat(resultOdd.away_od)
                   let sumAllCurrentOdd = parseFloat(currentResultOdd.home_od) + parseFloat(currentResultOdd.draw_od) + parseFloat(currentResultOdd.away_od)
+                  let currentOddsDifferent = Math.abs(parseFloat(currentResultOdd.home_od) - parseFloat(currentResultOdd.away_od))
+                  let startOddsDifferent = Math.abs(parseFloat(resultOdd.home_od) - parseFloat(resultOdd.away_od))
 
                   let handicapArray = odd.handicap.split(',');
 
-                  if (sumAllStartOdd < 8.7 && sumAllCurrentOdd <= 8.8) {
+                  if (currentOddsDifferent <= 1.36 && startOddsDifferent <= 1.5) {
 
                     let homeName = item.home.name ? item.home.name.split(' ').join('-') : '';
                     let awayName = item.away.name ? item.away.name.split(' ').join('-') : '';
@@ -164,7 +166,7 @@ function start() {
                       goalsArray = item.ss.split('-');
                     }
 
-                    let message = 'Бот 0_0_full V1.0\n';
+                    let message = 'Бот 0_0_full V2.0\n';
 
                     message += '\u26BD ' + item.league.name + "\n";
                     message += '<b>' + item.home.name + ' ' + unicodeScores[goalsArray[0]] + '-' + unicodeScores[goalsArray[1]]  + ' ' + item.away.name + "</b> \u23F0 <i>" + item.timer.tm + "\'</i>\n";
