@@ -50,7 +50,7 @@ bot.on("callback_query", function(query) {
     return goalTimes;
   }
 
-  rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + query.data)
+  rp('https://api.betsapi.com/v1/event/view?token=8334-fosWHlkPaVmESh&event_id=' + query.data)
     .then(function(viewRequest) {
       console.log('запрос callback_view');
       let viewReq = JSON.parse(viewRequest).results[0];
@@ -125,7 +125,7 @@ bot.on("callback_query", function(query) {
 function start() {
   let filteredResults = [];
 
-  rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-BCLtMmtKT698vk')
+  rp('https://api.betsapi.com/v2/events/inplay?sport_id=1&token=8334-fosWHlkPaVmESh')
     .then(function (response) {
       console.log('запрос events');
       let totalScores = [];
@@ -151,7 +151,7 @@ function start() {
 
       _.forEach(filteredResults, function(item) {
 
-        rp('https://api.betsapi.com/v1/event/view?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
+        rp('https://api.betsapi.com/v1/event/view?token=8334-fosWHlkPaVmESh&event_id=' + item.id)
           .then(function (response2) {
             console.log('запрос view');
 
@@ -178,7 +178,7 @@ function start() {
             if ((goalsOnTarget >= 3 && goalsOnTargetDiff >= 2 || goalsOnTarget >= 5) && goalsOffTarget >= 2
               && favoriteDangerAttacksKef >= 2.8) {
 
-              rp('https://api.betsapi.com/v1/event/odds?token=8334-BCLtMmtKT698vk&event_id=' + item.id)
+              rp('https://api.betsapi.com/v1/event/odds?token=8334-fosWHlkPaVmESh&event_id=' + item.id)
                 .then(function (response3) {
                   console.log('запрос odds');
                   let jsonOdds = JSON.parse(response3).results['1_3'];

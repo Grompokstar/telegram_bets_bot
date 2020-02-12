@@ -21,7 +21,7 @@ const bot = new TelegramBot(token, {polling: true});
 const testChannelId = -1001259208814;
 const mainTestChannel = '@betbomb_test_channel';
 const zaryadPlusCommonChannel = '@betbomb_zaryad_common';
-const API = 'https://api.betsapi.com/v2/events/upcoming?sport_id=1&token=8334-BCLtMmtKT698vk';
+const API = 'https://api.betsapi.com/v2/events/upcoming?sport_id=1&token=8334-fosWHlkPaVmESh';
 
 Date.prototype.toLocaleDateString = function (lang) {
   this.setDate(this.getDate() + 1);
